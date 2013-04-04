@@ -69,4 +69,25 @@ describe 'root' do
       content.should match "^bar$"
     end
   end
+  
+  context "authorized_keys as top-scope variable root_authorized_keys" do
+    let(:facts) {
+      {
+        :osfamily => 'RedHat',
+        :operatingsystemrelease => '6.4',
+        :root_authorized_keys => 'foo,bar',
+      }
+    }
+    
+    let(:params) do
+      {
+      }
+    end
+    
+    it "should generate a template for /root/.ssh/authorized_keys" do
+      content = catalogue.resource('file', "/root/.ssh/authorized_keys").send(:parameters)[:content]
+      content.should match "^foo$"
+      content.should match "^bar$"
+    end
+  end
 end
