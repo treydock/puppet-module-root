@@ -55,4 +55,18 @@ describe 'root' do
     content.should match "^foo$"
     content.should match "^bar$"
   end
+  
+  context "authorized_keys as list" do
+    let(:params) do
+      {
+        :authorized_keys => 'foo,bar',
+      }
+    end
+    
+    it "should generate a template for /root/.ssh/authorized_keys" do
+      content = catalogue.resource('file', "/root/.ssh/authorized_keys").send(:parameters)[:content]
+      content.should match "^foo$"
+      content.should match "^bar$"
+    end
+  end
 end
