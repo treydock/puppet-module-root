@@ -1,51 +1,51 @@
 # == Class: root
 #
-# Full description of class root here.
+# Manage the root directory and SSH authorized_keys.
 #
 # === Parameters
 #
-# Document parameters here.
-#
-# [*sample_parameter*]
-#   Explanation of what this parameter affects and what it defaults to.
-#   e.g. "Specify one or more upstream ntp servers as an array."
+# [*authorized_keys*]
+#   The array of authorized keys for the root account.
+#   Overrides the variable 'root_authorized_keys'.
 #
 # === Variables
 #
-# Here you should define a list of variables that this module would require.
-#
-# [*sample_variable*]
-#   Explanation of how this variable affects the funtion of this class and if it
-#   has a default. e.g. "The parameter enc_ntp_servers must be set by the
-#   External Node Classifier as a comma separated list of hostnames." (Note,
-#   global variables should not be used in preference to class parameters  as of
-#   Puppet 2.6.)
+# [*root_authorized_keys*]
+#   The list or array of authorized keys for the root account.
 #
 # === Examples
 #
 #  class { root:
-#    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ]
+#    authorized_keys => [ 'foo', 'bar' ]
 #  }
 #
 # === Authors
 #
-# Author Name <author@domain.com>
+# Trey Dockendorf <treydock@gmail.com>
 #
 # === Copyright
 #
-# Copyright 2013 Your name here, unless otherwise noted.
+# Copyright 2013 Trey Dockendorf
 #
 class root (
   $authorized_keys = $root::params::authorized_keys
 
 ) inherits root::params {
-  
+
+  if is_array($authorized_keys) {
+    $authorized_keys_real = $authorized_keys
+  } elsif is_string($authorized_keys) {
+    $authorized_keys_real = split($authorized_keys, ',')
+  } else {
+    fail('Invalid value for authorized_keys')
+  }
+
   file { '/root':
     ensure  => 'directory',
     path    => '/root',
     owner   => 'root',
     group   => 'root',
-    mode    => '750',
+    mode    => '0750',
   }
 
   file { '/root/.ssh':
@@ -53,18 +53,18 @@ class root (
     path    => '/root/.ssh',
     owner   => 'root',
     group   => 'root',
-    mode    => '700',
+    mode    => '0700',
     require => File['/root'],
   }
-  
+
   file { '/root/.ssh/authorized_keys':
     ensure  => 'present',
     path    => '/root/.ssh/authorized_keys',
     content => template('root/authorized_keys.erb'),
     owner   => 'root',
     group   => 'root',
-    mode    => '600',
+    mode    => '0600',
     require => File['/root/.ssh'],
   }
-  
+
 }
