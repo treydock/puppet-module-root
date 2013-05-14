@@ -1,9 +1,5 @@
 require 'puppetlabs_spec_helper/module_spec_helper'
 
-RSpec.configure do |config|
-  config.formatter = :documentation
-end
-
 class String
   def camelize(term, uppercase_first_letter = true)
     string = term.to_s
