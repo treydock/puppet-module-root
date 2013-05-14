@@ -1,6 +1,13 @@
 require 'spec_helper'
 
 describe 'root' do
+  shared_context :shared_authorized_keys do
+    it do
+      should contain_file('/root/.ssh/authorized_keys') \
+        .with_content(/^foo$/) \
+        .with_content(/^bar$/)
+    end
+  end
 
   let(:facts) {
     {
@@ -8,15 +15,6 @@ describe 'root' do
       :operatingsystemrelease => '6.4'
     }
   }
-
-  let(:params) do
-    {
-      :authorized_keys => [
-        'foo',
-        'bar',
-      ],
-    }
-  end
 
   it do
     should contain_file('/root').with({
@@ -43,6 +41,7 @@ describe 'root' do
     should contain_file('/root/.ssh/authorized_keys').with({
       'ensure'  => 'present',
       'path'    => '/root/.ssh/authorized_keys',
+      'content' => nil,
       'owner'   => 'root',
       'group'   => 'root',
       'mode'    => '0600',
@@ -50,12 +49,19 @@ describe 'root' do
     })
   end
 
-  it "should generate a template for /root/.ssh/authorized_keys" do
-    content = catalogue.resource('file', "/root/.ssh/authorized_keys").send(:parameters)[:content]
-    content.should match "^foo$"
-    content.should match "^bar$"
+  context "authorized_keys as array" do
+    let(:params) do
+      {
+        :authorized_keys => [
+          'foo',
+          'bar',
+        ],
+      }
+    end
+
+    include_context :shared_authorized_keys
   end
-  
+
   context "authorized_keys as list" do
     let(:params) do
       {
@@ -63,11 +69,7 @@ describe 'root' do
       }
     end
     
-    it "should generate a template for /root/.ssh/authorized_keys" do
-      content = catalogue.resource('file', "/root/.ssh/authorized_keys").send(:parameters)[:content]
-      content.should match "^foo$"
-      content.should match "^bar$"
-    end
+    include_context :shared_authorized_keys
   end
   
   context "authorized_keys as top-scope variable root_authorized_keys" do
@@ -84,10 +86,6 @@ describe 'root' do
       }
     end
     
-    it "should generate a template for /root/.ssh/authorized_keys" do
-      content = catalogue.resource('file', "/root/.ssh/authorized_keys").send(:parameters)[:content]
-      content.should match "^foo$"
-      content.should match "^bar$"
-    end
+    include_context :shared_authorized_keys
   end
 end
