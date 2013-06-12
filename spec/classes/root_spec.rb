@@ -22,7 +22,7 @@ describe 'root' do
       'path'    => '/root',
       'owner'   => 'root',
       'group'   => 'root',
-      'mode'    => '0750'
+      'mode'    => '0550'
     })
   end
 

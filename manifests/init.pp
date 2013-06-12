@@ -53,7 +53,7 @@ class root (
     path    => '/root',
     owner   => 'root',
     group   => 'root',
-    mode    => '0750',
+    mode    => '0550',
   }
 
   file { '/root/.ssh':
@@ -65,7 +65,6 @@ class root (
     require => File['/root'],
   }
 
-  
   file { '/root/.ssh/authorized_keys':
     ensure  => 'present',
     path    => '/root/.ssh/authorized_keys',
