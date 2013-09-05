@@ -9,12 +9,9 @@ describe 'root' do
     end
   end
 
-  let(:facts) {
-    {
-      :osfamily => 'RedHat',
-      :operatingsystemrelease => '6.4'
-    }
-  }
+  include_context :defaults
+
+  let(:facts) { default_facts }
 
   it do
     should contain_file('/root').with({
@@ -50,41 +47,21 @@ describe 'root' do
   end
 
   context "authorized_keys as array" do
-    let(:params) do
-      {
-        :authorized_keys => [
-          'foo',
-          'bar',
-        ],
-      }
-    end
+    let(:params) {{ :authorized_keys => [ 'foo', 'bar' ] }}
 
     include_context :shared_authorized_keys
   end
 
   context "authorized_keys as list" do
-    let(:params) do
-      {
-        :authorized_keys => 'foo,bar',
-      }
-    end
+    let(:params) {{ :authorized_keys => 'foo,bar' }}
     
     include_context :shared_authorized_keys
   end
   
   context "authorized_keys as top-scope variable root_authorized_keys" do
-    let(:facts) {
-      {
-        :osfamily => 'RedHat',
-        :operatingsystemrelease => '6.4',
-        :root_authorized_keys => 'foo,bar',
-      }
-    }
-    
-    let(:params) do
-      {
-      }
-    end
+    let(:facts) { default_facts.merge({ :root_authorized_keys => 'foo,bar' }) }
+
+    let(:params) {{}}
     
     include_context :shared_authorized_keys
   end
