@@ -1,12 +1,16 @@
 # == Class: root
 #
-# Manage the root directory and SSH authorized_keys.
+# Manage the root user.
 #
 # === Parameters
 #
+# [*mailaliases*]
+#   Array.  Sets the alias mail addresses for the root user.
+#   Default: []
+#
 # [*authorized_keys*]
-#   The array of authorized keys for the root account.
-#   Overrides the variable 'root_authorized_keys'.
+#   Array. Authorized keys for the root account.
+#   Overrides the top-scope variable 'root_authorized_keys'.
 #
 # === Variables
 #
@@ -16,6 +20,7 @@
 # === Examples
 #
 #  class { root:
+#    mailaliases     => [ 'foo@bar.com', 'root@bar.com']
 #    authorized_keys => [ 'foo', 'bar' ]
 #  }
 #
@@ -28,9 +33,11 @@
 # Copyright 2013 Trey Dockendorf
 #
 class root (
-  $authorized_keys = $root::params::authorized_keys
-
+  $mailaliases      = [],
+  $authorized_keys  = $root::params::authorized_keys
 ) inherits root::params {
+
+  validate_array($mailaliases)
 
   if is_array($authorized_keys) {
     $authorized_keys_real = $authorized_keys
@@ -40,12 +47,15 @@ class root (
     fail('Invalid value for authorized_keys.  Expect an Array or String')
   }
 
-  $authorized_keys_length = inline_template('<%= @authorized_keys_real.size %>')
+  $mailalias_ensure = empty($mailaliases) ? {
+    true  => 'absent',
+    false => 'present',
+  }
 
-  if $authorized_keys_length == 0 {
-    $authorized_keys_content = undef
-  } else {
-    $authorized_keys_content = template('root/authorized_keys.erb')
+  exec { 'root newaliases':
+    command     => 'newaliases',
+    path        => ['/usr/bin','/usr/sbin','/bin','/sbin'],
+    refreshonly => true,
   }
 
   file { '/root':
@@ -54,25 +64,27 @@ class root (
     owner   => 'root',
     group   => 'root',
     mode    => '0550',
-  }
-
+  }->
   file { '/root/.ssh':
     ensure  => 'directory',
     path    => '/root/.ssh',
     owner   => 'root',
     group   => 'root',
     mode    => '0700',
-    require => File['/root'],
-  }
-
+  }->
   file { '/root/.ssh/authorized_keys':
     ensure  => 'present',
     path    => '/root/.ssh/authorized_keys',
-    content => $authorized_keys_content,
+    content => template('root/authorized_keys.erb'),
     owner   => 'root',
     group   => 'root',
     mode    => '0600',
-    require => File['/root/.ssh'],
+  }
+
+  mailalias { 'root':
+    ensure    => $mailalias_ensure,
+    recipient => $mailaliases,
+    notify    => Exec['root newaliases'],
   }
 
 }

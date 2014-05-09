@@ -6,6 +6,7 @@
 .vagrant/
 spec/fixtures/modules/
 .rspec_system/
+/Vagrantfile
 
 # Ruby and RVM
 .ruby-version

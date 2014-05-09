@@ -19,13 +19,13 @@ class root::params {
     default => $::root_authorized_keys
   }
 
-  case $::osfamily {
-    'RedHat': {
-
+  case $::kernel {
+    'Linux': {
+      # Do nothing
     }
 
     default: {
-      fail("Unsupported osfamily: ${::osfamily}, module ${module_name} only support osfamily RedHat")
+      fail("Unsupported kernel: ${::kernel}, module ${module_name} only support kernel Linux")
     }
   }
 
