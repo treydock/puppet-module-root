@@ -4,7 +4,7 @@
 #
 class root (
   $mailaliases          = $root::params::mailaliases,
-  $ssh_authorized_keys  = $root::params::authorized_keys,
+  $ssh_authorized_keys  = $root::params::ssh_authorized_keys,
   $password             = undef,
   $purge_ssh_keys       = true,
 ) inherits root::params {
