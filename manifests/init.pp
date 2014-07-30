@@ -1,51 +1,16 @@
 # == Class: root
 #
-# Manage the root user.
-#
-# === Parameters
-#
-# [*mailaliases*]
-#   Array.  Sets the alias mail addresses for the root user.
-#   Default: []
-#
-# [*authorized_keys*]
-#   Array. Authorized keys for the root account.
-#   Overrides the top-scope variable 'root_authorized_keys'.
-#
-# === Variables
-#
-# [*root_authorized_keys*]
-#   The list or array of authorized keys for the root account.
-#
-# === Examples
-#
-#  class { root:
-#    mailaliases     => [ 'foo@bar.com', 'root@bar.com']
-#    authorized_keys => [ 'foo', 'bar' ]
-#  }
-#
-# === Authors
-#
-# Trey Dockendorf <treydock@gmail.com>
-#
-# === Copyright
-#
-# Copyright 2013 Trey Dockendorf
+# Public class
 #
 class root (
-  $mailaliases      = [],
-  $authorized_keys  = $root::params::authorized_keys
+  $mailaliases          = $root::params::mailaliases,
+  $ssh_authorized_keys  = $root::params::authorized_keys,
+  $password             = undef,
+  $purge_ssh_keys       = true,
 ) inherits root::params {
 
   validate_array($mailaliases)
-
-  if is_array($authorized_keys) {
-    $authorized_keys_real = $authorized_keys
-  } elsif is_string($authorized_keys) {
-    $authorized_keys_real = split($authorized_keys, ',')
-  } else {
-    fail('Invalid value for authorized_keys.  Expect an Array or String')
-  }
+  validate_bool($purge_ssh_keys)
 
   $mailalias_ensure = empty($mailaliases) ? {
     true  => 'absent',
@@ -56,6 +21,23 @@ class root (
     command     => 'newaliases',
     path        => ['/usr/bin','/usr/sbin','/bin','/sbin'],
     refreshonly => true,
+  }
+
+  user { 'root':
+    ensure          => 'present',
+    comment         => 'root',
+    forcelocal      => true,
+    gid             => '0',
+    home            => '/root',
+    password        => $password,
+    shell           => '/bin/bash',
+    uid             => '0',
+  }
+
+  if versioncmp($serverversion, '3.6.0') >= 0 and versioncmp($clientversion, '3.6.0') >= 0 {
+    User <| title == 'root' |> {
+      purge_ssh_keys  => $purge_ssh_keys,
+    }
   }
 
   file { '/root':
@@ -75,7 +57,6 @@ class root (
   file { '/root/.ssh/authorized_keys':
     ensure  => 'present',
     path    => '/root/.ssh/authorized_keys',
-    content => template('root/authorized_keys.erb'),
     owner   => 'root',
     group   => 'root',
     mode    => '0600',
@@ -85,6 +66,14 @@ class root (
     ensure    => $mailalias_ensure,
     recipient => $mailaliases,
     notify    => Exec['root newaliases'],
+  }
+
+  if is_array($ssh_authorized_keys) and ! empty($ssh_authorized_keys) {
+    ensure_resource('root::ssh_authorized_key', $ssh_authorized_keys)
+  }
+
+  if is_hash($ssh_authorized_keys) and ! empty($ssh_authorized_keys) {
+    create_resources('root::ssh_authorized_key', $ssh_authorized_keys)
   }
 
 }

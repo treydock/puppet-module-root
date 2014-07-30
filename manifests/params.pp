@@ -1,27 +1,13 @@
 # == Class: root::params
 #
-# Default parameters for the root class.
-# This class looks for variables in top scope (such as ENC).
-# The parameterized value takes presedence over the variables.
-#
-# === Authors
-#
-# Trey Dockendorf <treydock@gmail.com>
-#
-# === Copyright
-#
-# Copyright 2013 Trey Dockendorf
+# The root default configuration settings.
 #
 class root::params {
 
-  $authorized_keys = $::root_authorized_keys ? {
-    undef   => [],
-    default => $::root_authorized_keys
-  }
-
   case $::kernel {
     'Linux': {
-      # Do nothing
+      $ssh_authorized_keys  = hiera_hash('root_ssh_authorized_keys', {})
+      $mailaliases          = hiera_array('root_mailaliases', [])
     }
 
     default: {
