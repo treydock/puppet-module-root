@@ -96,21 +96,23 @@ describe 'root' do
   it { should contain_mailalias('root').with_ensure('absent') }
 
   context "authorized_keys as an Array" do
-    let(:params) {{ :ssh_authorized_keys => [ 'ssh-rsa longhashfoo== foo', 'ssh-dsa longhashbar== bar' ] }}
+    let(:params) {{ :ssh_authorized_keys => [ 'ssh-rsa longhashfoo== foo', 'ssh-dss longhashbar== bar' ] }}
 
     it { should have_root__ssh_authorized_key_resource_count(2) }
     it { should contain_root__ssh_authorized_key('ssh-rsa longhashfoo== foo') }
-    it { should contain_root__ssh_authorized_key('ssh-dsa longhashbar== bar') }
+    it { should contain_root__ssh_authorized_key('ssh-dss longhashbar== bar') }
     it do
-      should contain_ssh_authorized_key('foo').with({
+      should contain_ssh_authorized_key('ssh-rsa longhashfoo== foo').with({
+        :name => 'foo',
         :key  => 'longhashfoo==',
         :type => 'ssh-rsa',
       })
     end
     it do
-      should contain_ssh_authorized_key('bar').with({
+      should contain_ssh_authorized_key('ssh-dss longhashbar== bar').with({
+        :name => 'bar',
         :key  => 'longhashbar==',
-        :type => 'ssh-dsa',
+        :type => 'ssh-dss',
       })
     end
   end
@@ -123,7 +125,7 @@ describe 'root' do
       },
       'bar' => {
         'key'   => 'longhashbar==',
-        'type'  => 'dsa',
+        'type'  => 'dss',
       }
     }}}
 
@@ -137,7 +139,7 @@ describe 'root' do
     it do
       should contain_root__ssh_authorized_key('bar').with({
         :key  => 'longhashbar==',
-        :type => 'dsa',
+        :type => 'dss',
       })
     end
     it do
@@ -149,7 +151,7 @@ describe 'root' do
     it do
       should contain_ssh_authorized_key('bar').with({
         :key  => 'longhashbar==',
-        :type => 'dsa',
+        :type => 'dss',
       })
     end
   end

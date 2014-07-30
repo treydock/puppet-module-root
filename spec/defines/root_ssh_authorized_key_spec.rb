@@ -49,7 +49,7 @@ describe 'root::ssh_authorized_key' do
     it { should create_root__ssh_authorized_key('ssh-rsa longhash foo@bar') }
 
     it do
-      should contain_ssh_authorized_key('foo@bar').only_with({
+      should contain_ssh_authorized_key('ssh-rsa longhash foo@bar').only_with({
         :ensure   => 'present',
         :name     => 'foo@bar',
         :key      => 'longhash',
