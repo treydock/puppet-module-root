@@ -34,7 +34,7 @@ class root (
     uid             => '0',
   }
 
-  if versioncmp($serverversion, '3.6.0') >= 0 and versioncmp($clientversion, '3.6.0') >= 0 {
+  if versioncmp($::puppetversion, '3.6.0') >= 0 {
     User <| title == 'root' |> {
       purge_ssh_keys  => $purge_ssh_keys,
     }

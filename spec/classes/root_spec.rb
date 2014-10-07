@@ -3,8 +3,7 @@ require 'spec_helper'
 describe 'root' do
   let(:facts) {{
     :kernel         => 'Linux',
-    :serverversion  => Puppet.version,
-    :clientversion  => Puppet.version,
+    :puppetversion  => Puppet.version,
   }}
 
   it { should create_class('root') }
