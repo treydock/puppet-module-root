@@ -6,8 +6,7 @@ class root::params {
 
   case $::kernel {
     'Linux': {
-      $ssh_authorized_keys  = hiera_hash('root_ssh_authorized_keys', {})
-      $mailaliases          = hiera_array('root_mailaliases', [])
+      # Do nothing
     }
 
     default: {
