@@ -1,6 +1,6 @@
 # puppet-root
 
-[![Build Status](https://travis-ci.org/treydock/puppet-root.svg?branch=master)](https://travis-ci.org/treydock/puppet-root)
+[![Build Status](https://travis-ci.org/treydock/puppet-module-root.svg?branch=master)](https://travis-ci.org/treydock/puppet-module-root)
 
 ####Table of Contents
 
