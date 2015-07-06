@@ -67,7 +67,7 @@ describe 'root' do
       :owner    => 'root',
       :group    => 'root',
       :mode     => '0550',
-      :before   => 'File[/root/.ssh]',
+      :before   => ['File[/root/.ssh]'],
     })
   end
 
@@ -78,7 +78,7 @@ describe 'root' do
       :owner    => 'root',
       :group    => 'root',
       :mode     => '0700',
-      :before   => 'File[/root/.ssh/authorized_keys]',
+      :before   => ['File[/root/.ssh/authorized_keys]'],
     })
   end
 
