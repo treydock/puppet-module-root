@@ -1,0 +1,25 @@
+{
+  "name": "treydock-root",
+  "version": "2.0.0",
+  "author": "treydock",
+  "summary": "root account module",
+  "license": "Apache-2.0",
+  "source": "git://github.com/treydock/puppet-module-root.git",
+  "project_page": "http://github.com/treydock/puppet-module-root",
+  "description": "root account module",
+  "issues_url": "https://github.com/treydock/puppet-module-root/issues",
+  "tags": [ "root" ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [ "6.0", "7.0" ]
+    },
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [ "6.0", "7.0" ]
+    }
+  ],
+  "dependencies": [
+    { "name":"puppetlabs-stdlib", "version_requirement": ">= 3.2.0 <5.0.0" }
+  ]
+}
