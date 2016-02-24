@@ -1,13 +1,6 @@
 require 'beaker-rspec'
 
-hosts.each do |host|
-  # Install Puppet
-  if host['platform'] =~ /el-(5|6)/
-    relver = $1
-    on host, "rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-#{relver}.noarch.rpm", { :acceptable_exit_codes => [0,1] }
-    on host, 'yum install -y puppet', { :acceptable_exit_codes => [0,1] }
-  end
-end
+install_puppet_on(hosts, {:version => '3.8.3'})
 
 RSpec.configure do |c|
   # Project root

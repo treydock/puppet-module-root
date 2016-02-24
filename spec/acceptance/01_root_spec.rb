@@ -30,7 +30,7 @@ describe 'root class:' do
       it { should be_mode 600 }
       it { should be_owned_by 'root' }
       it { should be_grouped_into 'root' }
-      its(:content) { skip("The purge_ssh_keys is not working in 3.6.2") { should match /^$/ } }
+      its(:content) { should match /^$/ }
     end
 
     describe file('/etc/aliases') do
