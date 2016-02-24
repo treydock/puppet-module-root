@@ -28,6 +28,19 @@ Manage root and define mailaliases, ssh_authorized_keys and set a password.
       ],
     }
 
+To export a system's root RSA key
+
+    class { 'root':
+      export_key => true,
+    }
+
+To collect exported root RSA keys from multiple tags
+
+    class { 'root':
+      collect_exported_keys      => true,
+      collect_exported_keys_tags => [$::domain, 'foo']
+    }
+
 ## Reference
 
 ### Classes
@@ -38,6 +51,7 @@ Manage root and define mailaliases, ssh_authorized_keys and set a password.
 
 #### Private classes
 
+* `root::rsakey::export`: Exports root's RSA key
 * `root::params`: Sets module default values.
 
 ### Parameters
@@ -76,11 +90,31 @@ The password hash used for the root account.  Default value is `undef`.
 
 Boolean.  Sets if unmanaged SSH keys will be purged for the root account.  Default value is `true`.
 
+#####`export_key`
+
+Boolean.  Sets if the root SSH RSA key should be created and exported.  Default value is `false`.
+
+#####`export_key_tag`
+
+The tag to use when exporting the root SSH RSA key.  Default value is `$::domain`.
+
+#####`collect_exported_keys`
+
+Boolean.  Sets if the export root SSH RSA keys should be collected.  Default value is `false`.
+
+#####`collect_exported_keys_tags`
+
+Array of tags for root SSH RSA keys to collect.  Default value is `[$::domain]`.
+
 ### Defines
 
 #### root::ssh\_authorized\_keys
 
 TODO
+
+#### root::rsakey::collect
+
+This is a private defined type.
 
 ## Limitations
 

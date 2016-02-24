@@ -9,9 +9,15 @@ class root (
   $ssh_authorized_keys_hiera_merge  = true,
   $password                         = undef,
   $purge_ssh_keys                   = true,
+  $export_key                       = false,
+  $export_key_tag                   = $::domain,
+  $collect_exported_keys            = false,
+  $collect_exported_keys_tags       = [$::domain],
 ) inherits root::params {
 
   validate_bool($mailaliases_hiera_merge, $ssh_authorized_keys_hiera_merge, $purge_ssh_keys)
+  validate_bool($export_key, $collect_exported_keys)
+  validate_array($collect_exported_keys_tags)
 
   if $mailaliases_hiera_merge {
     $_mailaliases = hiera_array('root::mailaliases', $mailaliases)
@@ -88,6 +94,14 @@ class root (
 
   if is_hash($_ssh_authorized_keys) and ! empty($_ssh_authorized_keys) {
     create_resources('root::ssh_authorized_key', $_ssh_authorized_keys)
+  }
+
+  if $export_key {
+    include root::rsakey::export
+  }
+
+  if $collect_exported_keys {
+    root::rsakey::collect { $collect_exported_keys_tags: }
   }
 
 }
