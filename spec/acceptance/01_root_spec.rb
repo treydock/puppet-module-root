@@ -41,6 +41,7 @@ describe 'root class:' do
   context 'when mailaliases defined' do
     it 'should run successfully' do
       pp = <<-EOS
+        package { 'postfix': ensure => present }->
         class { 'root': mailaliases => [ 'foo@bar.com' ] }
       EOS
 

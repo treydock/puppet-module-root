@@ -41,6 +41,7 @@ class root (
     command     => 'newaliases',
     path        => ['/usr/bin','/usr/sbin','/bin','/sbin'],
     refreshonly => true,
+    onlyif      => 'which newaliases'
   }
 
   user { 'root':
