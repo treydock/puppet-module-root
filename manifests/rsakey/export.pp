@@ -8,11 +8,10 @@ class root::rsakey::export {
   }
 
   if $::root_sshrsakey {
-    @@ssh_authorized_key { "root@${::fqdn}":
+    @@root::ssh_authorized_key { "root@${::fqdn}":
       ensure => 'present',
       key    => $::root_sshrsakey,
       type   => 'ssh-rsa',
-      user   => 'root',
       tag    => $root::export_key_tag,
     }
   }
