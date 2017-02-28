@@ -173,6 +173,9 @@ describe 'root' do
 
       context 'export_key => true' do
         let(:params) {{ :export_key => true }}
+        let(:facts) {
+          facts.merge({:root_sshrsakey => 'somelonghash=='})
+        }
 
         it { should contain_class('root::rsakey::export') }
 

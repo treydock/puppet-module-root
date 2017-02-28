@@ -18,28 +18,33 @@ This module manages the Linux root user.
 
 ### root
 
-Manage root and define mailaliases, ssh_authorized_keys and set a password.
+    include ::root
 
-    class { 'root':
-      mailaliases         => ['root@example.com'],
-      password            => '$1$Bp8B.dWo$DUVekjsAsU0ttWZmS37P5',
-      ssh_authorized_keys => [
-        'ssh-rsa somelonghash== user@fqdn',
-      ],
-    }
+Manage root and define mailaliases, ssh\_authorized\_keys and set a password.
+
+    root::mailaliases:
+      - 'root@example.com'
+    root::password: '$1$Bp8B.dWo$DUVekjsAsU0ttWZmS37P5'
+    root::ssh_authorized_keys:
+      - 'ssh-rsa somelonghash== user@fqdn'
+
+Authorized keys can also be set using a hash.
+
+    root::ssh_authorized_keys:
+      user@fqdn:
+        type: 'ssh-rsa'
+        key: 'somelonghash=='
 
 To export a system's root RSA key
 
-    class { 'root':
-      export_key => true,
-    }
+    root::export_key: true
 
 To collect exported root RSA keys from multiple tags
 
-    class { 'root':
-      collect_exported_keys      => true,
-      collect_exported_keys_tags => [$::domain, 'foo']
-    }
+    root::collect_exported_keys: true
+    root::collect_exported_keys_tags:
+      - "${::domain}"
+      - 'foo'
 
 ## Reference
 
@@ -72,7 +77,7 @@ Default value is `true`.
 
 #####`ssh_authorized_keys`
 
-Defines ssh\_autorized\_keys to be passed to the `root::ssh_authorized_keys` defined type.  An array or hash can be given.
+Defines ssh\_autorized\_keys to be passed to the `root::ssh_authorized_key` defined type.  An array or hash can be given.
 
 If the value is an Array, it must take the form 
 
@@ -108,9 +113,11 @@ Array of tags for root SSH RSA keys to collect.  Default value is `[$::domain]`.
 
 ### Defines
 
-#### root::ssh\_authorized\_keys
+#### root::ssh\_authorized\_key
 
-TODO
+Used to define root authorized SSH keys.
+
+All parameters are passed to root's ssh\_authorized\_key type.
 
 #### root::rsakey::collect
 
