@@ -13,6 +13,8 @@ class root (
   $export_key_tag                   = $::domain,
   $collect_exported_keys            = false,
   $collect_exported_keys_tags       = [$::domain],
+  $ssh_private_key_source           = undef,
+  $ssh_public_key_source            = undef,
 ) inherits root::params {
 
   validate_bool($mailaliases_hiera_merge, $ssh_authorized_keys_hiera_merge, $purge_ssh_keys)
@@ -67,20 +69,40 @@ class root (
     owner  => 'root',
     group  => 'root',
     mode   => '0550',
-  }->
+  }
   file { '/root/.ssh':
     ensure => 'directory',
     path   => '/root/.ssh',
     owner  => 'root',
     group  => 'root',
     mode   => '0700',
-  }->
+  }
   file { '/root/.ssh/authorized_keys':
     ensure => 'present',
     path   => '/root/.ssh/authorized_keys',
     owner  => 'root',
     group  => 'root',
     mode   => '0600',
+  }
+  if $ssh_private_key_source {
+    file { '/root/.ssh/id_rsa':
+      ensure => 'present',
+      path   => '/root/.ssh/id_rsa',
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0600',
+      source => $ssh_private_key_source,
+    }
+  }
+  if $ssh_public_key_source {
+    file { '/root/.ssh/id_rsa.pub':
+      ensure => 'present',
+      path   => '/root/.ssh/id_rsa.pub',
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0600',
+      source => $ssh_public_key_source,
+    }
   }
 
   mailalias { 'root':
@@ -99,6 +121,7 @@ class root (
 
   if $export_key {
     include root::rsakey::export
+    Class['root'] -> Class['root::rsakey::export']
   }
 
   if $collect_exported_keys {
