@@ -16,7 +16,7 @@ describe 'root_sshrsakey fact' do
 
   it "should return /root/.ssh/id_rsa.pub key" do
     FileTest.stubs(:file?).with('/root/.ssh/id_rsa.pub').returns(true)
-    Facter::Util::FileRead.expects(:read).with('/root/.ssh/id_rsa.pub').returns("ssh-rsa SOMEKEY== root@foo\n")
+    Facter::Util::Resolution.expects(:exec).with('cat /root/.ssh/id_rsa.pub').returns("ssh-rsa SOMEKEY== root@foo\n")
     expect(Facter.fact(:root_sshrsakey).value).to eq('SOMEKEY==')
   end
 
