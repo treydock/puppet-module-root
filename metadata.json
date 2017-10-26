@@ -1,6 +1,6 @@
 {
   "name": "treydock-root",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "author": "treydock",
   "summary": "root account module",
   "license": "Apache-2.0",
@@ -20,6 +20,9 @@
     }
   ],
   "dependencies": [
-    { "name":"puppetlabs/stdlib", "version_requirement": ">= 3.2.0 <5.0.0" }
+    { "name":"puppetlabs/stdlib", "version_requirement": ">= 4.13.1 <5.0.0" }
+  ],
+  "requirements": [
+    {"name": "puppet", "version_requirement": ">= 4.7.0 < 6.0.0" }
   ]
 }

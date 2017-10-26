@@ -4,6 +4,12 @@ Release notes for the treydock-root module.
 
 ------------------------------------------
 
+#### 3.0.0 - 2017-10-26
+
+This release drops support for Puppet 3.
+
+------------------------------------------
+
 #### 2.0.0 - 2017-10-26
 
 This release introduces new features that are not backwards compatible with the previous release.
