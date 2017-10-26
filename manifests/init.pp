@@ -3,23 +3,19 @@
 # Public class
 #
 class root (
-  $mailaliases                      = [],
-  $mailaliases_hiera_merge          = true,
-  $ssh_authorized_keys              = {},
-  $ssh_authorized_keys_hiera_merge  = true,
-  $password                         = undef,
-  $purge_ssh_keys                   = true,
-  $export_key                       = false,
-  $export_key_tag                   = $::domain,
-  $collect_exported_keys            = false,
-  $collect_exported_keys_tags       = [$::domain],
-  $ssh_private_key_source           = undef,
-  $ssh_public_key_source            = undef,
+  Array $mailaliases                        = [],
+  Boolean $mailaliases_hiera_merge          = true,
+  Variant[Array, Hash] $ssh_authorized_keys = {},
+  Boolean $ssh_authorized_keys_hiera_merge  = true,
+  Optional[String] $password                = undef,
+  Boolean $purge_ssh_keys                   = true,
+  Boolean $export_key                       = false,
+  String $export_key_tag                    = $::domain,
+  Boolean $collect_exported_keys            = false,
+  Array $collect_exported_keys_tags         = [$::domain],
+  Optional[String] $ssh_private_key_source  = undef,
+  Optional[String] $ssh_public_key_source   = undef,
 ) inherits root::params {
-
-  validate_bool($mailaliases_hiera_merge, $ssh_authorized_keys_hiera_merge, $purge_ssh_keys)
-  validate_bool($export_key, $collect_exported_keys)
-  validate_array($collect_exported_keys_tags)
 
   if $mailaliases_hiera_merge {
     $_mailaliases = hiera_array('root::mailaliases', $mailaliases)
@@ -47,20 +43,15 @@ class root (
   }
 
   user { 'root':
-    ensure     => 'present',
-    comment    => 'root',
-    forcelocal => true,
-    gid        => '0',
-    home       => '/root',
-    password   => $password,
-    shell      => '/bin/bash',
-    uid        => '0',
-  }
-
-  if versioncmp($::puppetversion, '3.6.0') >= 0 {
-    User <| title == 'root' |> {
-      purge_ssh_keys => $purge_ssh_keys,
-    }
+    ensure         => 'present',
+    comment        => 'root',
+    forcelocal     => true,
+    gid            => '0',
+    home           => '/root',
+    password       => $password,
+    shell          => '/bin/bash',
+    uid            => '0',
+    purge_ssh_keys => $purge_ssh_keys,
   }
 
   file { '/root':

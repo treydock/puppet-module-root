@@ -22,33 +22,17 @@ describe 'root' do
         })
       end
 
-      if Gem::Version.new(Puppet.version) >= Gem::Version.new('3.6.0')
-        it do
-          should contain_user('root').only_with({
-            :ensure         => 'present',
-            :comment        => 'root',
-            :forcelocal     => 'true',
-            :gid            => '0',
-            :home           => '/root',
-            :password       => nil,
-            :purge_ssh_keys => 'true',
-            :shell          => '/bin/bash',
-            :uid            => '0',
-          })
-        end
-      else
-        it do
-          should contain_user('root').only_with({
-            :ensure         => 'present',
-            :comment        => 'root',
-            :forcelocal     => 'true',
-            :gid            => '0',
-            :home           => '/root',
-            :password       => nil,
-            :shell          => '/bin/bash',
-            :uid            => '0',
-          })
-        end
+      it do
+        should contain_user('root').only_with({
+          :ensure         => 'present',
+          :comment        => 'root',
+          :forcelocal     => 'true',
+          :gid            => '0',
+          :home           => '/root',
+          :shell          => '/bin/bash',
+          :uid            => '0',
+          :purge_ssh_keys => 'true',
+        })
       end
 
       it { should_not contain_class('root::rsakey::export') }
@@ -56,9 +40,7 @@ describe 'root' do
 
       context 'when purge_ssh_keys => false' do
         let(:params) {{ :purge_ssh_keys => false }}
-        if Gem::Version.new(Puppet.version) >= Gem::Version.new('3.6.0')
-          it { should contain_user('root').with_purge_ssh_keys('false') }
-        end
+        it { should contain_user('root').with_purge_ssh_keys('false') }
       end
 
       it { should contain_file('/root').that_comes_before('File[/root/.ssh]') }
@@ -199,16 +181,6 @@ describe 'root' do
           it { should contain_root__rsakey__collect('foo') }
           it { should contain_root__rsakey__collect('bar') }
         end
-      end
-
-      context "mailaliases => 'foo'" do
-        let(:params) {{ :mailaliases => 'foo' }}
-        it { expect { should compile }.to raise_error(/is not an Array/) }
-      end
-
-      context "purge_ssh_keys => 'foo'" do
-        let(:params) {{ :purge_ssh_keys => 'foo' }}
-        it { expect { should compile }.to raise_error(/is not a boolean/) }
       end
 
     end # end context
