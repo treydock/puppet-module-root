@@ -1,6 +1,25 @@
-# == Define: root::ssh_authorized_key
+# @summary Define root user's ssh_authorized_key resources
 #
-# Define root user's ssh_authorized_key resources
+# @example Define ssh_authorized_key using Hash
+#   root::ssh_authorized_key { 'user@fqdn':
+#     type => 'ssh-rsa',
+#     key  => 'somelonghash==',
+#   }
+#
+# @example Define ssh_authorized_key using name string
+#   root::ssh_authorized_key { 'ssh-rsa somelonghash== user@fqdn': }
+#
+# @param ensure
+#   ssh_authorized_key ensure property
+#
+# @param key
+#   The SSH key hash
+#
+# @param options
+#   The SSH key options
+#
+# @param type
+#   The type of SSH key.
 #
 define root::ssh_authorized_key (
   $ensure = 'present',

@@ -1,4 +1,5 @@
-# == Class: root::rsakey::export
+# @summary Private class
+# @api private
 class root::rsakey::export {
 
   exec { "ssh-keygen root@${::fqdn}":

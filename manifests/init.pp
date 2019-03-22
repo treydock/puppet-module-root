@@ -1,6 +1,39 @@
-# == Class: root
+# @summary Manage root user
 #
-# Public class
+# @example
+#   include ::root
+#
+# @param mailaliases
+#   An array that defines mailaliases for the root user (defaults to an empty array).
+#   When an empty array is given Mailaliases[root] is set to `ensure => absent`.
+#
+# @param mailaliases_hiera_merge
+#   Boolean that determines if the Hiera lookup merging is used for `root::mailaliases` values.
+#
+# @param ssh_authorized_keys
+#   Defines ssh_autorized_keys to be passed to the `root::ssh_authorized_key` defined type.
+#   See `root::ssh_authorized_key` for examples of valid formats
+#
+# @param ssh_authorized_keys_hiera_merge
+#   Boolean that determines if the Hiera lookup merging `root::ssh_authorized_keys` values.
+#
+# @param password
+#   The password hash used for the root account.
+#
+# @param purge_ssh_keys
+#   Sets if unmanaged SSH keys will be purged for the root account.
+#
+# @param export_key
+#   Sets if the root SSH RSA key should be created and exported.
+#
+# @param export_key_tag
+#   The tag to use when exporting the root SSH RSA key.
+#
+# @param collect_exported_keys
+#   Sets if the export root SSH RSA keys should be collected.
+#
+# @param collect_exported_keys_tags
+#   Array of tags for root SSH RSA keys to collect.
 #
 class root (
   Array $mailaliases                        = [],
@@ -22,7 +55,6 @@ class root (
   } else {
     $_mailaliases = $mailaliases
   }
-  validate_array($_mailaliases)
 
   $mailalias_ensure = empty($_mailaliases) ? {
     true  => 'absent',
@@ -30,7 +62,11 @@ class root (
   }
 
   if $ssh_authorized_keys_hiera_merge {
-    $_ssh_authorized_keys = hiera_hash('root::ssh_authorized_keys', $ssh_authorized_keys)
+    if $ssh_authorized_keys =~ Array {
+      $_ssh_authorized_keys = lookup('root::ssh_authorized_keys', Array, 'unique', $ssh_authorized_keys)
+    } else {
+      $_ssh_authorized_keys = lookup('root::ssh_authorized_keys', Hash, 'deep', $ssh_authorized_keys)
+    }
   } else {
     $_ssh_authorized_keys = $ssh_authorized_keys
   }
@@ -102,16 +138,20 @@ class root (
     notify    => Exec['root newaliases'],
   }
 
-  if is_array($_ssh_authorized_keys) and ! empty($_ssh_authorized_keys) {
-    ensure_resource('root::ssh_authorized_key', $_ssh_authorized_keys)
-  }
-
-  if is_hash($_ssh_authorized_keys) and ! empty($_ssh_authorized_keys) {
-    create_resources('root::ssh_authorized_key', $_ssh_authorized_keys)
+  if $_ssh_authorized_keys =~ Array {
+    $_ssh_authorized_keys.each |$key| {
+      root::ssh_authorized_key { $key: }
+    }
+  } else {
+    $_ssh_authorized_keys.each |$name, $data| {
+      root::ssh_authorized_key { $name:
+        * => $data,
+      }
+    }
   }
 
   if $export_key {
-    include root::rsakey::export
+    contain root::rsakey::export
     Class['root'] -> Class['root::rsakey::export']
   }
 

@@ -1,17 +1,11 @@
 require 'puppetlabs_spec_helper/rake_tasks'
 require 'puppet-lint/tasks/puppet-lint'
 require 'puppet-syntax/tasks/puppet-syntax'
+require 'puppet-strings/tasks'
 
-PuppetLint.configuration.send("disable_80chars")
-PuppetLint.configuration.send('disable_quoted_booleans')
-PuppetLint.configuration.log_format = "%{path}:%{line}:%{check}:%{KIND}:%{message}"
-PuppetLint.configuration.fail_on_warnings = true
-
-# Forsake support for Puppet 2.6.2 for the benefit of cleaner code.
-# http://puppet-lint.com/checks/class_parameter_defaults/
-PuppetLint.configuration.send('disable_class_parameter_defaults')
-# http://puppet-lint.com/checks/class_inherits_from_params_class/
-PuppetLint.configuration.send('disable_class_inherits_from_params_class')
+task :default do
+  sh %{rake -T}
+end
 
 exclude_paths = [
   "pkg/**/*",
@@ -19,7 +13,16 @@ exclude_paths = [
   "spec/**/*",
 ]
 
-PuppetLint.configuration.ignore_paths = exclude_paths
+Rake::Task[:lint].clear
+PuppetLint::RakeTask.new :lint do |config|
+  config.ignore_paths = exclude_paths
+  config.fail_on_warnings = true
+  config.log_format = "%{path}:%{line}:%{check}:%{KIND}:%{message}"
+  config.disable_checks = ['140chars', 'class_inherits_from_params_class']
+  #config.relative = true
+end
+PuppetLint.configuration.relative = true
+
 PuppetSyntax.exclude_paths = exclude_paths
 
 desc "Run syntax, lint, and spec tests."
@@ -28,3 +31,26 @@ task :test => [
   :lint,
   :spec,
 ]
+
+desc "Run release prep commands"
+task :release_prep, [:release] do |t, args|
+  metadata_json = File.join(File.dirname(__FILE__), 'metadata.json')
+  metadata = JSON.load(File.read(metadata_json))
+  author = metadata['author']
+  project = metadata['project_page'].split('/')[-1]
+  if args[:release].nil?
+    release = metadata['version']
+  else
+    release = args[:release]
+  end
+
+
+  sh "github_changelog_generator --user #{author} --project #{project} --output /dev/stdout --future-release #{release}"
+  sh "puppet strings generate --format markdown"
+end
+
+desc "Run release commands"
+task :release do
+  Rake::Task[:build].invoke
+  Rake::Task[:'strings:gh_pages:update'].invoke
+end

@@ -1,7 +1,5 @@
-# == Class: root::params
-#
-# The root default configuration settings.
-#
+# @summary Private class
+# @api private
 class root::params {
 
   case $::kernel {
