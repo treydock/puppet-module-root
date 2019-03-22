@@ -1,10 +1,9 @@
 # root_sshrsakey.rb
 
-root_sshrsakey_path = '/root/.ssh/id_rsa.pub'
-
 Facter.add(:root_sshrsakey) do
   confine :kernel => 'Linux'
   setcode do
+    root_sshrsakey_path = '/root/.ssh/id_rsa.pub'
     value = nil
     if FileTest.file?(root_sshrsakey_path)
       begin

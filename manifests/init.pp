@@ -18,7 +18,7 @@ class root (
 ) inherits root::params {
 
   if $mailaliases_hiera_merge {
-    $_mailaliases = hiera_array('root::mailaliases', $mailaliases)
+    $_mailaliases = lookup('root::mailaliases', Array, 'unique', $mailaliases)
   } else {
     $_mailaliases = $mailaliases
   }
