@@ -4,6 +4,15 @@ Release notes for the treydock-root module.
 
 ------------------------------------------
 
+#### 4.0.0 - 2019-03-22
+
+* Drop support for Puppet 4, only support Puppet 5 and 6
+* Better handling of `root::ssh_authorized_keys` being Array or Hash
+* Development and testing improvements
+* Document using puppet strings
+
+------------------------------------------
+
 #### 3.0.0 - 2017-10-26
 
 This release drops support for Puppet 3.
