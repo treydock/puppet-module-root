@@ -15,6 +15,11 @@
 
 This module manages the Linux root user.
 
+Puppet 6 has soft dependencies on the following modules:
+
+* [puppetlabs/mailalias_core](https://forge.puppet.com/puppetlabs/mailalias_core)
+* [puppetlabs/sshkeys_core](https://forge.puppet.com/puppetlabs/sshkeys_core)
+
 ## Usage
 
 ### root
