@@ -6,23 +6,40 @@
   "license": "Apache-2.0",
   "source": "git://github.com/treydock/puppet-module-root.git",
   "project_page": "http://github.com/treydock/puppet-module-root",
-  "description": "root account module",
   "issues_url": "https://github.com/treydock/puppet-module-root/issues",
-  "tags": [ "root" ],
+  "dependencies": [
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 4.13.1 <6.0.0"
+    }
+  ],
   "operatingsystem_support": [
     {
       "operatingsystem": "RedHat",
-      "operatingsystemrelease": [ "6", "7" ]
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
     },
     {
       "operatingsystem": "CentOS",
-      "operatingsystemrelease": [ "6", "7" ]
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
     }
   ],
-  "dependencies": [
-    { "name":"puppetlabs/stdlib", "version_requirement": ">= 4.13.1 <6.0.0" }
-  ],
   "requirements": [
-    {"name": "puppet", "version_requirement": ">= 5.0.0 < 7.0.0" }
-  ]
+    {
+      "name": "puppet",
+      "version_requirement": ">= 5.0.0 < 7.0.0"
+    }
+  ],
+  "description": "root account module",
+  "tags": [
+    "root"
+  ],
+  "pdk-version": "1.10.0",
+  "template-url": "https://github.com/treydock/pdk-templates.git#master",
+  "template-ref": "heads/master-0-g8d10331"
 }

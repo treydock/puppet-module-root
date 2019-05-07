@@ -2,44 +2,44 @@ require 'spec_helper_acceptance'
 
 describe 'root class:' do
   context 'default parameters' do
-    it 'should run successfully' do
-      pp =<<-EOS
+    it 'runs successfully' do
+      pp = <<-EOS
         class { 'root': }
       EOS
 
-      apply_manifest(pp, :catch_failures => true)
-      apply_manifest(pp, :catch_changes => true)
+      apply_manifest(pp, catch_failures: true)
+      apply_manifest(pp, catch_changes: true)
     end
 
     describe file('/root') do
-      it { should be_directory }
-      it { should be_mode 550 }
-      it { should be_owned_by 'root' }
-      it { should be_grouped_into 'root' }
+      it { is_expected.to be_directory }
+      it { is_expected.to be_mode 550 }
+      it { is_expected.to be_owned_by 'root' }
+      it { is_expected.to be_grouped_into 'root' }
     end
 
     describe file('/root/.ssh') do
-      it { should be_directory }
-      it { should be_mode 700 }
-      it { should be_owned_by 'root' }
-      it { should be_grouped_into 'root' }
+      it { is_expected.to be_directory }
+      it { is_expected.to be_mode 700 }
+      it { is_expected.to be_owned_by 'root' }
+      it { is_expected.to be_grouped_into 'root' }
     end
 
     describe file('/root/.ssh/authorized_keys') do
-      it { should be_file }
-      it { should be_mode 600 }
-      it { should be_owned_by 'root' }
-      it { should be_grouped_into 'root' }
-      its(:content) { should match /^$/ }
+      it { is_expected.to be_file }
+      it { is_expected.to be_mode 600 }
+      it { is_expected.to be_owned_by 'root' }
+      it { is_expected.to be_grouped_into 'root' }
+      its(:content) { is_expected.to match %r{^$} }
     end
 
     describe file('/etc/aliases') do
-      its(:content) { should_not match /^root:/ }
+      its(:content) { is_expected.not_to match %r{^root:} }
     end
   end
 
   context 'when mailaliases defined' do
-    it 'should run successfully' do
+    it 'runs successfully' do
       pp = <<-EOS
         package { 'postfix': ensure => present }->
         augeas { 'inet_protocols ipv4':
@@ -50,12 +50,12 @@ describe 'root class:' do
         class { 'root': mailaliases => [ 'foo@bar.com' ] }
       EOS
 
-      apply_manifest(pp, :catch_failures => true)
-      apply_manifest(pp, :catch_changes => true)
+      apply_manifest(pp, catch_failures: true)
+      apply_manifest(pp, catch_changes: true)
     end
 
     describe file('/etc/aliases') do
-      its(:content) { should match /^root:\s+foo@bar.com$/ }
+      its(:content) { is_expected.to match %r{^root:\s+foo@bar.com$} }
     end
   end
 end
