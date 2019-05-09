@@ -1,10 +1,10 @@
 {
   "name": "treydock-root",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "author": "treydock",
   "summary": "root account module",
   "license": "Apache-2.0",
-  "source": "git://github.com/treydock/puppet-module-root.git",
+  "source": "https://github.com/treydock/puppet-module-root",
   "project_page": "http://github.com/treydock/puppet-module-root",
   "issues_url": "https://github.com/treydock/puppet-module-root/issues",
   "dependencies": [
