@@ -151,7 +151,7 @@ class root (
   }
 
   if $export_key {
-    contain root::rsakey::export
+    include root::rsakey::export
     Class['root'] -> Class['root::rsakey::export']
   }
 
