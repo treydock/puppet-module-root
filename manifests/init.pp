@@ -26,6 +26,9 @@
 # @param export_key
 #   Sets if the root SSH RSA key should be created and exported.
 #
+# @param export_key_options
+#   Options to set for the exported SSH RSA key
+#
 # @param export_key_tag
 #   The tag to use when exporting the root SSH RSA key.
 #
@@ -43,6 +46,7 @@ class root (
   Optional[String] $password                = undef,
   Boolean $purge_ssh_keys                   = true,
   Boolean $export_key                       = false,
+  Optional[Array] $export_key_options       = undef,
   String $export_key_tag                    = $::domain,
   Boolean $collect_exported_keys            = false,
   Array $collect_exported_keys_tags         = [$::domain],
