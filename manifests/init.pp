@@ -38,6 +38,12 @@
 # @param collect_exported_keys_tags
 #   Array of tags for root SSH RSA keys to collect.
 #
+# @param ssh_private_key_source
+#   The source for root's SSH RSA private key
+#
+# @param ssh_public_key_source
+#   The source for root's SSH RSA public key
+#
 class root (
   Array $mailaliases                        = [],
   Boolean $mailaliases_hiera_merge          = true,
