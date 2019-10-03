@@ -6,7 +6,7 @@
 <title>
   Puppet Class: root::rsakey::export
   
-    &mdash; Documentation by YARD 0.9.19
+    &mdash; Documentation by YARD 0.9.20
   
 </title>
 
@@ -109,7 +109,8 @@
 17
 18
 19
-20</pre>
+20
+21</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/rsakey/export.pp', line 3</span>
@@ -124,10 +125,11 @@ class root::rsakey::export {
 
   if $::root_sshrsakey {
     @@root::ssh_authorized_key { &quot;root@${::fqdn}&quot;:
-      ensure =&gt; &#39;present&#39;,
-      key    =&gt; $::root_sshrsakey,
-      type   =&gt; &#39;ssh-rsa&#39;,
-      tag    =&gt; $root::export_key_tag,
+      ensure  =&gt; &#39;present&#39;,
+      key     =&gt; $::root_sshrsakey,
+      type    =&gt; &#39;ssh-rsa&#39;,
+      options =&gt; $::root::export_key_options,
+      tag     =&gt; $root::export_key_tag,
     }
   }
 

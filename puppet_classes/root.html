@@ -6,7 +6,7 @@
 <title>
   Puppet Class: root
   
-    &mdash; Documentation by YARD 0.9.19
+    &mdash; Documentation by YARD 0.9.20
   
 </title>
 
@@ -233,6 +233,24 @@ to <code>ensure =&gt; absent</code>.</p>
   
     <li>
       
+        <span class='name'>export_key_options</span>
+      
+      
+        <span class='type'>(<tt>Optional[Array]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Options to set for the exported SSH RSA key</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
         <span class='name'>export_key_tag</span>
       
       
@@ -296,6 +314,11 @@ to <code>ensure =&gt; absent</code>.</p>
         <em class="default">(defaults to: <tt>undef</tt>)</em>
       
       
+        &mdash;
+        <div class='inline'>
+<p>The source for root&#39;s SSH RSA private key</p>
+</div>
+      
     </li>
   
     <li>
@@ -309,6 +332,11 @@ to <code>ensure =&gt; absent</code>.</p>
         <em class="default">(defaults to: <tt>undef</tt>)</em>
       
       
+        &mdash;
+        <div class='inline'>
+<p>The source for root&#39;s SSH RSA public key</p>
+</div>
+      
     </li>
   
 </ul>
@@ -321,15 +349,6 @@ to <code>ensure =&gt; absent</code>.</p>
         <pre class="lines">
 
 
-38
-39
-40
-41
-42
-43
-44
-45
-46
 47
 48
 49
@@ -445,10 +464,20 @@ to <code>ensure =&gt; absent</code>.</p>
 159
 160
 161
-162</pre>
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 38</span>
+        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 47</span>
 
 class root (
   Array $mailaliases                        = [],
@@ -458,6 +487,7 @@ class root (
   Optional[String] $password                = undef,
   Boolean $purge_ssh_keys                   = true,
   Boolean $export_key                       = false,
+  Optional[Array] $export_key_options       = undef,
   String $export_key_tag                    = $::domain,
   Boolean $collect_exported_keys            = false,
   Array $collect_exported_keys_tags         = [$::domain],
