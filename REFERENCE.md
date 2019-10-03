@@ -100,6 +100,14 @@ Sets if the root SSH RSA key should be created and exported.
 
 Default value: `false`
 
+##### `export_key_options`
+
+Data type: `Optional[Array]`
+
+Options to set for the exported SSH RSA key
+
+Default value: `undef`
+
 ##### `export_key_tag`
 
 Data type: `String`
@@ -128,7 +136,7 @@ Default value: [$::domain]
 
 Data type: `Optional[String]`
 
-
+The source for root's SSH RSA private key
 
 Default value: `undef`
 
@@ -136,7 +144,7 @@ Default value: `undef`
 
 Data type: `Optional[String]`
 
-
+The source for root's SSH RSA public key
 
 Default value: `undef`
 
