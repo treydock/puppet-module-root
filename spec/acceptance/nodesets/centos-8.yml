@@ -1,16 +1,16 @@
 HOSTS:
-  centos-6:
+  centos-8:
     roles:
       - agent
-    platform: el-6-x86_64
+    platform: el-8-x86_64
     hypervisor: docker
-    image: centos:6
+    image: centos:8
     docker_preserve_image: true
     docker_cmd:
-      - '/sbin/init'
+      - '/usr/sbin/init'
     docker_image_commands:
-      - 'yum install -y wget which cronie iproute'
-    docker_container_name: 'root-el6'
+      - 'yum install -y wget which cronie iproute initscripts'
+    docker_container_name: 'root-el7'
 CONFIG:
   log_level: debug
   type: foss
