@@ -62,6 +62,32 @@ root::collect_exported_keys_tags:
   - 'foo'
 ```
 
+Add Kerberos principals to `/root/.k5login`:
+
+```yaml
+root::kerberos_login_principals:
+  - user1@EXAMPLE.COM
+  - user2@EXAMPLE.COM
+```
+
+Add Kerberos principals and commands to `/root/.k5users`. Note that user3 and user4 will not have commands defined.  The examples also illustrate defining commands as strings or arrays.
+
+```yaml
+root::kerberos_users_commands:
+  user1@EXAMPLE.COM:
+    - /bin/systemctl
+    - /bin/cat
+  user2@EXAMPLE.COM: /bin/systemctl /bin/cat
+  user3@EXAMPLE.COM: ''
+  user4@EXAMPLE.COM: []
+```
+
+If a different module manages Kerberos for root, disable Kerberos in this module:
+
+```yaml
+root::manage_kerberos: false
+```
+
 ## Reference
 
 [http://treydock.github.io/puppet-module-root/](http://treydock.github.io/puppet-module-root/)

@@ -44,6 +44,15 @@
 # @param ssh_public_key_source
 #   The source for root's SSH RSA public key
 #
+# @param manage_kerberos
+#   Boolean that sets if Kerberos files should be managed
+#
+# @param kerberos_login_principals
+#   The Kerberos principals to write to /root/.k5login
+#
+# @param kerberos_users_commands
+#   The Kerberos user principals and commands to write to /root/.k5users
+#
 class root (
   Array $mailaliases                        = [],
   Boolean $mailaliases_hiera_merge          = true,
@@ -58,6 +67,9 @@ class root (
   Array $collect_exported_keys_tags         = [$::domain],
   Optional[String] $ssh_private_key_source  = undef,
   Optional[String] $ssh_public_key_source   = undef,
+  Boolean $manage_kerberos                  = true,
+  Array $kerberos_login_principals          = [],
+  Hash[String[1], Variant[String, Array]] $kerberos_users_commands = {},
 ) inherits root::params {
 
   if $mailaliases_hiera_merge {
@@ -169,4 +181,7 @@ class root (
     root::rsakey::collect { $collect_exported_keys_tags: }
   }
 
+  if $manage_kerberos {
+    contain root::kerberos
+  }
 }

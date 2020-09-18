@@ -10,6 +10,7 @@ describe 'root' do
       it { is_expected.to compile.with_all_deps }
       it { is_expected.to create_class('root') }
       it { is_expected.to contain_class('root::params') }
+      it { is_expected.to contain_class('root::kerberos') }
 
       it { is_expected.to have_root__ssh_authorized_key_resource_count(0) }
 
@@ -33,6 +34,9 @@ describe 'root' do
 
       it { is_expected.not_to contain_class('root::rsakey::export') }
       it { is_expected.to have_root__rsakey__collect_resource_count(0) }
+
+      it { is_expected.to contain_file('/root/.k5login').with_ensure('absent') }
+      it { is_expected.to contain_file('/root/.k5users').with_ensure('absent') }
 
       context 'when purge_ssh_keys => false' do
         let(:params) { { purge_ssh_keys: false } }
@@ -157,6 +161,47 @@ describe 'root' do
           it { is_expected.to have_root__rsakey__collect_resource_count(2) }
           it { is_expected.to contain_root__rsakey__collect('foo') }
           it { is_expected.to contain_root__rsakey__collect('bar') }
+        end
+      end
+
+      context 'with kerberos not managed' do
+        let(:params) { { manage_kerberos: false } }
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.not_to contain_class('root::kerberos') }
+        it { is_expected.not_to contain_file('/root/.k5login') }
+        it { is_expected.not_to contain_file('/root/.k5users') }
+      end
+
+      context 'with kerberos_login_principals defined' do
+        let(:params) { { kerberos_login_principals: ['user1@EXAMPLE.COM', 'user2@EXAMPLE.COM'] } }
+
+        it 'has valid contents' do
+          verify_contents(catalogue, '/root/.k5login', [
+                            'user1@EXAMPLE.COM',
+                            'user2@EXAMPLE.COM',
+                          ])
+        end
+      end
+      context 'with kerberos_users_commands defined' do
+        let(:params) do
+          {
+            kerberos_users_commands: {
+              'user1@EXAMPLE.COM' => ['/foo', '/bar'],
+              'user2@EXAMPLE.COM' => '/foo/bar /baz',
+              'user3@EXAMPLE.COM' => '',
+              'user4@EXAMPLE.COM' => [],
+            },
+          }
+        end
+
+        it 'has valid contents' do
+          verify_contents(catalogue, '/root/.k5users', [
+                            'user1@EXAMPLE.COM /foo /bar',
+                            'user2@EXAMPLE.COM /foo/bar /baz',
+                            'user3@EXAMPLE.COM ',
+                            'user4@EXAMPLE.COM ',
+                          ])
         end
       end
     end # end context
