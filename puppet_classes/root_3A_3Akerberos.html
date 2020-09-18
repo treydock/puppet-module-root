@@ -4,7 +4,7 @@
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>
-  Puppet Class: root::params
+  Puppet Class: root::kerberos
   
     &mdash; Documentation by YARD 0.9.25
   
@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="../css/common.css" type="text/css" />
 
 <script type="text/javascript">
-  pathId = "puppet_classes::root::params";
+  pathId = "puppet_classes::root::kerberos";
   relpath = '../';
 </script>
 
@@ -39,7 +39,7 @@
     <a href="../_index.html">Index (r)</a> &raquo;
     <span class='title'><span class='object_link'>Puppet Classes</span></span>
      &raquo; 
-    <span class="title">root::params</span>
+    <span class="title">root::kerberos</span>
   
 </div>
 
@@ -59,23 +59,14 @@
         <div class="clear"></div>
       </div>
 
-      <div id="content"><h1>Puppet Class: root::params</h1>
+      <div id="content"><h1>Puppet Class: root::kerberos</h1>
 <div class="box_info">
   
   
   <dl>
-    <dt>Inherited by:</dt>
-    <dd>
-      
-      <span class='object_link'><a href="root.html" title="puppet_classes::root (puppet_class)">root</a></span><br/>
-      
-    </dd>
-  </dl>
-  
-  <dl>
     <dt>Defined in:</dt>
     <dd>
-      manifests/params.pp
+      manifests/kerberos.pp
     </dd>
   </dl>
 </div>
@@ -114,23 +105,55 @@
 12
 13
 14
-15</pre>
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/params.pp', line 3</span>
+        <pre class="code"><span class="info file"># File 'manifests/kerberos.pp', line 3</span>
 
-class root::params {
+class root::kerberos {
+  $kerberos_login_principals = $root::kerberos_login_principals
+  $kerberos_users_commands = $root::kerberos_users_commands
 
-  case $::kernel {
-    &#39;Linux&#39;: {
-      # Do nothing
+  if ! empty($kerberos_login_principals) {
+    $k5login = [&#39;# File managed by Puppet (root::manage_kerberos = true), DO NOT EDIT&#39;] + $kerberos_login_principals
+    file { &#39;/root/.k5login&#39;:
+      ensure  =&gt; &#39;file&#39;,
+      owner   =&gt; &#39;root&#39;,
+      group   =&gt; &#39;root&#39;,
+      mode    =&gt; &#39;0600&#39;,
+      content =&gt; join($k5login, &quot;\n&quot;),
     }
-
-    default: {
-      fail(&quot;Unsupported kernel: ${::kernel}, module ${module_name} only support kernel Linux&quot;)
-    }
+  } else {
+    file { &#39;/root/.k5login&#39;: ensure =&gt; &#39;absent&#39; }
   }
 
+  if ! empty($kerberos_users_commands) {
+    file { &#39;/root/.k5users&#39;:
+      ensure  =&gt; &#39;file&#39;,
+      owner   =&gt; &#39;root&#39;,
+      group   =&gt; &#39;root&#39;,
+      mode    =&gt; &#39;0600&#39;,
+      content =&gt; template(&#39;root/k5users.erb&#39;),
+    }
+  } else {
+    file { &#39;/root/.k5users&#39;: ensure =&gt; &#39;absent&#39; }
+  }
 }</pre>
       </td>
     </tr>

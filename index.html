@@ -6,15 +6,15 @@
 <title>
   File: README
   
-    &mdash; Documentation by YARD 0.9.20
+    &mdash; Documentation by YARD 0.9.25
   
 </title>
 
-  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="css/style.css" type="text/css" />
 
-  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="css/common.css" type="text/css" />
 
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript">
   pathId = "";
   relpath = '';
 </script>
@@ -128,6 +128,32 @@ root::ssh_authorized_keys:
 root::collect_exported_keys_tags:
   - &quot;${::domain}&quot;
   - &#39;foo&#39;
+</code></pre>
+
+<p>Add Kerberos principals to <code>/root/.k5login</code>:</p>
+
+<pre class="code ruby"><code class="ruby">root::kerberos_login_principals:
+  - user1@EXAMPLE.COM
+  - user2@EXAMPLE.COM
+</code></pre>
+
+<p>Add Kerberos principals and commands to <code>/root/.k5users</code>. Note
+that user3 and user4 will not have commands defined. The examples also
+illustrate defining commands as strings or arrays.</p>
+
+<pre class="code ruby"><code class="ruby">root::kerberos_users_commands:
+  user1@EXAMPLE.COM:
+    - /bin/systemctl
+    - /bin/cat
+  user2@EXAMPLE.COM: /bin/systemctl /bin/cat
+  user3@EXAMPLE.COM: &#39;&#39;
+  user4@EXAMPLE.COM: []
+</code></pre>
+
+<p>If a different module manages Kerberos for root, disable Kerberos in this
+module:</p>
+
+<pre class="code ruby"><code class="ruby">root::manage_kerberos: false
 </code></pre>
 
 <h2 id="label-Reference">Reference</h2>
