@@ -11,6 +11,7 @@ _Public Classes_
 
 _Private Classes_
 
+* `root::kerberos`: Private class
 * `root::params`: Private class
 * `root::rsakey::export`: Private class
 
@@ -147,6 +148,30 @@ Data type: `Optional[String]`
 The source for root's SSH RSA public key
 
 Default value: `undef`
+
+##### `manage_kerberos`
+
+Data type: `Boolean`
+
+Boolean that sets if Kerberos files should be managed
+
+Default value: `true`
+
+##### `kerberos_login_principals`
+
+Data type: `Array`
+
+The Kerberos principals to write to /root/.k5login
+
+Default value: []
+
+##### `kerberos_users_commands`
+
+Data type: `Hash[String[1], Variant[String, Array]]`
+
+The Kerberos user principals and commands to write to /root/.k5users
+
+Default value: {}
 
 ## Defined types
 
