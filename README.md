@@ -88,6 +88,12 @@ If a different module manages Kerberos for root, disable Kerberos in this module
 root::manage_kerberos: false
 ```
 
+Set an automatic logout for idle interactive shells (in seconds):
+
+```yaml
+root::logout_timeout: 600
+```
+
 ## Reference
 
 [http://treydock.github.io/puppet-module-root/](http://treydock.github.io/puppet-module-root/)

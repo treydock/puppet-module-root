@@ -1,0 +1,11 @@
+# File managed by Puppet (root::logout_timeout = <%= scope['root::logout_timeout'] %>), DO NOT EDIT
+<% if scope['root::logout_timeout'] -%>
+<%   inminutes = Integer(scope['root::logout_timeout'] / 60) -%>
+<%   if scope['root::logout_timeout'] > 0  && inminutes == 0 -%>
+<%#  csh defines in minutes not seconds, cover edge case <60 seconds -%>
+<%     inminutes = 1 -%>
+<%   end -%>
+if ( `id -u` == "0" ) then
+    set -r autologout <%= inminutes %>
+endif
+<% end -%>

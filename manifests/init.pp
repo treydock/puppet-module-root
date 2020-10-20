@@ -44,6 +44,9 @@
 # @param ssh_public_key_source
 #   The source for root's SSH RSA public key
 #
+# @param logout_timeout
+#   Time (in seconds) before idle interactive terminals will logout
+#
 # @param manage_kerberos
 #   Boolean that sets if Kerberos files should be managed
 #
@@ -70,6 +73,7 @@ class root (
   Boolean $manage_kerberos                  = true,
   Array $kerberos_login_principals          = [],
   Hash[String[1], Variant[String, Array]] $kerberos_users_commands = {},
+  Optional[Integer[0, default]] $logout_timeout                    = undef,
 ) inherits root::params {
 
   if $mailaliases_hiera_merge {
@@ -158,6 +162,28 @@ class root (
     ensure    => $mailalias_ensure,
     recipient => $_mailaliases,
     notify    => Exec['root newaliases'],
+  }
+
+  if $logout_timeout {
+    $timeout_ensure = 'file'
+  } else {
+    $timeout_ensure = 'absent'
+  }
+
+  file {'/etc/profile.d/root_logout_timeout.sh':
+    ensure  => $timeout_ensure,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    content =>  template('root/root_logout_timeout.sh.erb')
+  }
+
+  file {'/etc/profile.d/root_logout_timeout.csh':
+    ensure  => $timeout_ensure,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    content =>  template('root/root_logout_timeout.csh.erb')
   }
 
   if $_ssh_authorized_keys =~ Array {
