@@ -149,6 +149,14 @@ The source for root's SSH RSA public key
 
 Default value: `undef`
 
+##### `logout_timeout`
+
+Data type: `Optional[Integer[0, default]]`
+
+Time (in seconds) before idle interactive terminals will logout
+
+Default value: `undef`
+
 ##### `manage_kerberos`
 
 Data type: `Boolean`
