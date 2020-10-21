@@ -1,0 +1,7 @@
+# File managed by Puppet (root::logout_timeout = <%= scope['root::logout_timeout'] %>), DO NOT EDIT
+<% if scope['root::logout_timeout'] -%>
+if [ `id -u` = 0 ] ; then
+    TMOUT=<%= scope['root::logout_timeout'] %>
+    export TMOUT
+fi
+<% end -%>

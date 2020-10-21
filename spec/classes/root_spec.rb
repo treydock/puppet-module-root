@@ -73,6 +73,14 @@ describe 'root' do
 
       it { is_expected.to contain_mailalias('root').with_ensure('absent') }
 
+      it do
+        is_expected.to contain_file('/etc/profile.d/root_logout_timeout.csh').with(ensure: 'absent')
+      end
+
+      it do
+        is_expected.to contain_file('/etc/profile.d/root_logout_timeout.sh').with(ensure: 'absent')
+      end
+
       context 'authorized_keys as an Array' do
         let(:params) { { ssh_authorized_keys: ['ssh-rsa longhashfoo== foo', 'ssh-dss longhashbar== bar'] } }
 
@@ -131,6 +139,57 @@ describe 'root' do
           is_expected.to contain_mailalias('root').with(ensure: 'present',
                                                         recipient: ['foo', 'bar'],
                                                         notify: 'Exec[root newaliases]')
+        end
+      end
+
+      context 'with timeout set over 1 minute' do
+        let(:params) { { logout_timeout: 90 } }
+
+        it do
+          is_expected.to contain_file('/etc/profile.d/root_logout_timeout.csh').with(ensure: 'file',
+                                                                                     owner: 'root',
+                                                                                     group: 'root',
+                                                                                     mode: '0644').with_content(%r{^\s*set -r autologout 1$})
+        end
+        it do
+          is_expected.to contain_file('/etc/profile.d/root_logout_timeout.sh').with(ensure: 'file',
+                                                                                    owner: 'root',
+                                                                                    group: 'root',
+                                                                                    mode: '0644').with_content(%r{^\s*TMOUT=90$})
+        end
+      end
+
+      context 'with timeout set less than 1 minute' do
+        let(:params) { { logout_timeout: 20 } }
+
+        it do
+          is_expected.to contain_file('/etc/profile.d/root_logout_timeout.csh').with(ensure: 'file',
+                                                                                     owner: 'root',
+                                                                                     group: 'root',
+                                                                                     mode: '0644').with_content(%r{^\s*set -r autologout 1$})
+        end
+        it do
+          is_expected.to contain_file('/etc/profile.d/root_logout_timeout.sh').with(ensure: 'file',
+                                                                                    owner: 'root',
+                                                                                    group: 'root',
+                                                                                    mode: '0644').with_content(%r{^\s*TMOUT=20$})
+        end
+      end
+
+      context 'with timeout set to 0' do
+        let(:params) { { logout_timeout: 0 } }
+
+        it do
+          is_expected.to contain_file('/etc/profile.d/root_logout_timeout.csh').with(ensure: 'file',
+                                                                                     owner: 'root',
+                                                                                     group: 'root',
+                                                                                     mode: '0644').with_content(%r{^\s*set -r autologout 0$})
+        end
+        it do
+          is_expected.to contain_file('/etc/profile.d/root_logout_timeout.sh').with(ensure: 'file',
+                                                                                    owner: 'root',
+                                                                                    group: 'root',
+                                                                                    mode: '0644').with_content(%r{^\s*TMOUT=0$})
         end
       end
 
