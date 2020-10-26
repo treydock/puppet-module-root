@@ -50,8 +50,14 @@
 # @param manage_kerberos
 #   Boolean that sets if Kerberos files should be managed
 #
+# @param kerberos_login_principals_hiera_merge
+#   Boolean that determines if the Hiera lookup merging `root::kerberos_login_principals` values.
+#
 # @param kerberos_login_principals
 #   The Kerberos principals to write to /root/.k5login
+#
+# @param kerberos_users_commands_hiera_merge
+#   Boolean that determines if the Hiera lookup merging `root::kerberos_users_commands` values.
 #
 # @param kerberos_users_commands
 #   The Kerberos user principals and commands to write to /root/.k5users
@@ -71,7 +77,9 @@ class root (
   Optional[String] $ssh_private_key_source  = undef,
   Optional[String] $ssh_public_key_source   = undef,
   Boolean $manage_kerberos                  = true,
-  Array $kerberos_login_principals          = [],
+  Boolean $kerberos_login_principals_hiera_merge = true,
+  Array $kerberos_login_principals               = [],
+  Boolean $kerberos_users_commands_hiera_merge   = true,
   Hash[String[1], Variant[String, Array]] $kerberos_users_commands = {},
   Optional[Integer[0, default]] $logout_timeout                    = undef,
 ) inherits root::params {

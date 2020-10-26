@@ -1,5 +1,5 @@
 # File managed by Puppet (root::manage_kerberos = true), DO NOT EDIT
-<%- @kerberos_users_commands.each_pair do |user, commands| -%>
+<%- @_kerberos_users_commands.each_pair do |user, commands| -%>
 <%-
 if commands.is_a?(Array)
   commands = commands.join(' ')
