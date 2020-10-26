@@ -165,6 +165,14 @@ Boolean that sets if Kerberos files should be managed
 
 Default value: `true`
 
+##### `kerberos_login_principals_hiera_merge`
+
+Data type: `Boolean`
+
+Boolean that determines if the Hiera lookup merging `root::kerberos_login_principals` values.
+
+Default value: `true`
+
 ##### `kerberos_login_principals`
 
 Data type: `Array`
@@ -172,6 +180,14 @@ Data type: `Array`
 The Kerberos principals to write to /root/.k5login
 
 Default value: []
+
+##### `kerberos_users_commands_hiera_merge`
+
+Data type: `Boolean`
+
+Boolean that determines if the Hiera lookup merging `root::kerberos_users_commands` values.
+
+Default value: `true`
 
 ##### `kerberos_users_commands`
 

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v4.6.0](https://github.com/treydock/puppet-module-root/tree/v4.6.0) (2020-10-26)
+
+[Full Changelog](https://github.com/treydock/puppet-module-root/compare/v4.5.0...v4.6.0)
+
+### Added
+
+- Add booleans for hiera merge [\#11](https://github.com/treydock/puppet-module-root/pull/11) ([jcpunk](https://github.com/jcpunk))
+
 ## [v4.5.0](https://github.com/treydock/puppet-module-root/tree/v4.5.0) (2020-10-21)
 
 [Full Changelog](https://github.com/treydock/puppet-module-root/compare/v4.4.0...v4.5.0)
