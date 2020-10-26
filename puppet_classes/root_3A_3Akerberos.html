@@ -121,17 +121,45 @@
 28
 29
 30
-31</pre>
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/kerberos.pp', line 3</span>
 
 class root::kerberos {
+  $kerberos_login_principals_hiera_merge = $root::kerberos_login_principals_hiera_merge
   $kerberos_login_principals = $root::kerberos_login_principals
+  $kerberos_users_commands_hiera_merge = $root::kerberos_users_commands_hiera_merge
   $kerberos_users_commands = $root::kerberos_users_commands
 
-  if ! empty($kerberos_login_principals) {
-    $k5login = [&#39;# File managed by Puppet (root::manage_kerberos = true), DO NOT EDIT&#39;] + $kerberos_login_principals
+  if $kerberos_login_principals_hiera_merge {
+    $_kerberos_login_principals = lookup(&#39;root::kerberos_login_principals&#39;, Array, &#39;unique&#39;, $kerberos_login_principals)
+  } else {
+    $_kerberos_login_principals = $kerberos_login_principals
+  }
+
+  if $kerberos_users_commands_hiera_merge {
+    $_kerberos_users_commands = lookup(&#39;root::kerberos_users_commands&#39;, Hash, {&#39;strategy&#39; =&gt; &#39;deep&#39;, &#39;merge_hash_arrays&#39; =&gt; true}, $kerberos_users_commands)
+  } else {
+    $_kerberos_users_commands = $kerberos_users_commands
+  }
+
+  if ! empty($_kerberos_login_principals) {
+    $k5login = [&#39;# File managed by Puppet (root::manage_kerberos = true), DO NOT EDIT&#39;] + $_kerberos_login_principals
     file { &#39;/root/.k5login&#39;:
       ensure  =&gt; &#39;file&#39;,
       owner   =&gt; &#39;root&#39;,
@@ -143,7 +171,7 @@ class root::kerberos {
     file { &#39;/root/.k5login&#39;: ensure =&gt; &#39;absent&#39; }
   }
 
-  if ! empty($kerberos_users_commands) {
+  if ! empty($_kerberos_users_commands) {
     file { &#39;/root/.k5users&#39;:
       ensure  =&gt; &#39;file&#39;,
       owner   =&gt; &#39;root&#39;,

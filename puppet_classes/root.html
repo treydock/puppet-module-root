@@ -377,6 +377,25 @@ to <code>ensure =&gt; absent</code>.</p>
   
     <li>
       
+        <span class='name'>kerberos_login_principals_hiera_merge</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>true</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Boolean that determines if the Hiera lookup merging
+<code>root::kerberos_login_principals</code> values.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
         <span class='name'>kerberos_login_principals</span>
       
       
@@ -389,6 +408,25 @@ to <code>ensure =&gt; absent</code>.</p>
         &mdash;
         <div class='inline'>
 <p>The Kerberos principals to write to /root/.k5login</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>kerberos_users_commands_hiera_merge</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>true</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Boolean that determines if the Hiera lookup merging
+<code>root::kerberos_users_commands</code> values.</p>
 </div>
       
     </li>
@@ -422,12 +460,6 @@ to <code>ensure =&gt; absent</code>.</p>
         <pre class="lines">
 
 
-59
-60
-61
-62
-63
-64
 65
 66
 67
@@ -576,10 +608,18 @@ to <code>ensure =&gt; absent</code>.</p>
 210
 211
 212
-213</pre>
+213
+214
+215
+216
+217
+218
+219
+220
+221</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 59</span>
+        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 65</span>
 
 class root (
   Array $mailaliases                        = [],
@@ -596,7 +636,9 @@ class root (
   Optional[String] $ssh_private_key_source  = undef,
   Optional[String] $ssh_public_key_source   = undef,
   Boolean $manage_kerberos                  = true,
-  Array $kerberos_login_principals          = [],
+  Boolean $kerberos_login_principals_hiera_merge = true,
+  Array $kerberos_login_principals               = [],
+  Boolean $kerberos_users_commands_hiera_merge   = true,
   Hash[String[1], Variant[String, Array]] $kerberos_users_commands = {},
   Optional[Integer[0, default]] $logout_timeout                    = undef,
 ) inherits root::params {
