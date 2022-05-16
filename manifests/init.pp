@@ -67,7 +67,7 @@ class root (
   Boolean $mailaliases_hiera_merge          = true,
   Variant[Array, Hash] $ssh_authorized_keys = {},
   Boolean $ssh_authorized_keys_hiera_merge  = true,
-  Optional[String] $password                = undef,
+  Optional[Variant[String, Sensitive[String]]] $password = undef,
   Boolean $purge_ssh_keys                   = true,
   Boolean $export_key                       = false,
   Optional[Array] $export_key_options       = undef,
@@ -112,13 +112,21 @@ class root (
     onlyif      => 'which newaliases'
   }
 
+  if $password != undef {
+    # ensure password is a sensitive value
+    # even if we were not passed one
+    $_password = Sensitive($password.unwrap)
+  } else {
+    $_password = undef
+  }
+
   user { 'root':
     ensure         => 'present',
     comment        => 'root',
     forcelocal     => true,
     gid            => '0',
     home           => '/root',
-    password       => $password,
+    password       => $_password,
     shell          => '/bin/bash',
     uid            => '0',
     purge_ssh_keys => $purge_ssh_keys,

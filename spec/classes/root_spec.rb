@@ -223,6 +223,22 @@ describe 'root' do
         end
       end
 
+      context 'with password as a String' do
+        let(:params) { { password: 'example password' } }
+
+        it do
+          is_expected.to contain_user('root').with_password(sensitive('example password'))
+        end
+      end
+
+      context 'with password as a Sensitive[String]' do
+        let(:params) { { password: sensitive('example password') } }
+
+        it do
+          is_expected.to contain_user('root').with_password(sensitive('example password'))
+        end
+      end
+
       context 'with kerberos not managed' do
         let(:params) { { manage_kerberos: false } }
 
@@ -242,6 +258,7 @@ describe 'root' do
                           ])
         end
       end
+
       context 'with kerberos_users_commands defined' do
         let(:params) do
           {
