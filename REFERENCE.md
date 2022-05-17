@@ -100,7 +100,7 @@ Default value: ``true``
 
 ##### <a name="password"></a>`password`
 
-Data type: `Optional[String]`
+Data type: `Optional[Variant[String, Sensitive[String]]]`
 
 The password hash used for the root account.
 
