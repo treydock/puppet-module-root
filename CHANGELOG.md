@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v5.1.0](https://github.com/treydock/puppet-module-root/tree/v5.1.0) (2022-05-17)
+
+[Full Changelog](https://github.com/treydock/puppet-module-root/compare/v5.0.0...v5.1.0)
+
+### Added
+
+- Support Debian and Ubuntu [\#16](https://github.com/treydock/puppet-module-root/pull/16) ([treydock](https://github.com/treydock))
+- Make password Sensitive [\#14](https://github.com/treydock/puppet-module-root/pull/14) ([jcpunk](https://github.com/jcpunk))
+
 ## [v5.0.0](https://github.com/treydock/puppet-module-root/tree/v5.0.0) (2022-03-15)
 
 [Full Changelog](https://github.com/treydock/puppet-module-root/compare/v4.6.0...v5.0.0)
