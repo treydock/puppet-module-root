@@ -182,7 +182,7 @@ to <code>ensure =&gt; absent</code>.</p>
         <span class='name'>password</span>
       
       
-        <span class='type'>(<tt>Optional[String]</tt>)</span>
+        <span class='type'>(<tt>Optional[Variant[String, Sensitive[String]]]</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>undef</tt>)</em>
@@ -616,7 +616,15 @@ to <code>ensure =&gt; absent</code>.</p>
 218
 219
 220
-221</pre>
+221
+222
+223
+224
+225
+226
+227
+228
+229</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/init.pp', line 65</span>
@@ -626,7 +634,7 @@ class root (
   Boolean $mailaliases_hiera_merge          = true,
   Variant[Array, Hash] $ssh_authorized_keys = {},
   Boolean $ssh_authorized_keys_hiera_merge  = true,
-  Optional[String] $password                = undef,
+  Optional[Variant[String, Sensitive[String]]] $password = undef,
   Boolean $purge_ssh_keys                   = true,
   Boolean $export_key                       = false,
   Optional[Array] $export_key_options       = undef,
@@ -671,13 +679,21 @@ class root (
     onlyif      =&gt; &#39;which newaliases&#39;
   }
 
+  if $password != undef {
+    # ensure password is a sensitive value
+    # even if we were not passed one
+    $_password = Sensitive($password.unwrap)
+  } else {
+    $_password = undef
+  }
+
   user { &#39;root&#39;:
     ensure         =&gt; &#39;present&#39;,
     comment        =&gt; &#39;root&#39;,
     forcelocal     =&gt; true,
     gid            =&gt; &#39;0&#39;,
     home           =&gt; &#39;/root&#39;,
-    password       =&gt; $password,
+    password       =&gt; $_password,
     shell          =&gt; &#39;/bin/bash&#39;,
     uid            =&gt; &#39;0&#39;,
     purge_ssh_keys =&gt; $purge_ssh_keys,
