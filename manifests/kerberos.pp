@@ -19,7 +19,7 @@ class root::kerberos {
   }
 
   if ! empty($_kerberos_login_principals) {
-    $k5login = ['# File managed by Puppet (root::manage_kerberos = true), DO NOT EDIT'] + $_kerberos_login_principals
+    $k5login = ['# File managed by Puppet (root::manage_kerberos = true), DO NOT EDIT'] + $_kerberos_login_principals + ['']
     file { '/root/.k5login':
       ensure  => 'file',
       owner   => 'root',
