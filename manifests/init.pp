@@ -155,22 +155,24 @@ class root (
   }
   if $ssh_private_key_source {
     file { '/root/.ssh/id_rsa':
-      ensure => 'present',
-      path   => '/root/.ssh/id_rsa',
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0600',
-      source => $ssh_private_key_source,
+      ensure    => 'present',
+      path      => '/root/.ssh/id_rsa',
+      owner     => 'root',
+      group     => 'root',
+      mode      => '0600',
+      source    => $ssh_private_key_source,
+      show_diff => false,
     }
   }
   if $ssh_public_key_source {
     file { '/root/.ssh/id_rsa.pub':
-      ensure => 'present',
-      path   => '/root/.ssh/id_rsa.pub',
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0600',
-      source => $ssh_public_key_source,
+      ensure    => 'present',
+      path      => '/root/.ssh/id_rsa.pub',
+      owner     => 'root',
+      group     => 'root',
+      mode      => '0600',
+      source    => $ssh_public_key_source,
+      show_diff => false,
     }
   }
 
