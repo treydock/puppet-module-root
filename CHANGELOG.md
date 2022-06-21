@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v5.1.2](https://github.com/treydock/puppet-module-root/tree/v5.1.2) (2022-06-21)
+
+[Full Changelog](https://github.com/treydock/puppet-module-root/compare/v5.1.1...v5.1.2)
+
+### Fixed
+
+- Set show\_diff to false for SSH public and private keys [\#18](https://github.com/treydock/puppet-module-root/pull/18) ([treydock](https://github.com/treydock))
+
 ## [v5.1.1](https://github.com/treydock/puppet-module-root/tree/v5.1.1) (2022-06-06)
 
 [Full Changelog](https://github.com/treydock/puppet-module-root/compare/v5.1.0...v5.1.1)
