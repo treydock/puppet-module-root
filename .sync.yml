@@ -4,19 +4,16 @@
       set:
         - el7
         - el8
-        - ---el9
+        - el9
         - debian-10
         - debian-11
         - ubuntu-1804
         - ubuntu-2004
+        - ubuntu-2204
       puppet:
         - puppet6
         - puppet7
 .gitlab-ci.yml:
   delete: true
 appveyor.yml:
-  delete: true
-spec/acceptance/nodesets/el9.yml:
-  delete: true
-spec/acceptance/nodesets/ubuntu-2204.yml:
   delete: true
