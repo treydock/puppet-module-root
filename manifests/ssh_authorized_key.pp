@@ -22,51 +22,29 @@
 #   The type of SSH key.
 #
 define root::ssh_authorized_key (
-  $ensure = 'present',
-  $key = 'UNSET',
-  $options = 'UNSET',
-  $type = 'UNSET',
+  Enum['present','absent'] $ensure = 'present',
+  Optional[String[1]] $key = undef,
+  Optional[Variant[String[1], Array]] $options = undef,
+  Optional[String[1]] $type = undef,
 ) {
-
   $name_parts = split($name, ' ')
 
-  if size($name_parts) < 3 and $key == 'UNSET' and $type == 'UNSET' {
+  if size($name_parts) < 3 and $key =~ Undef and $type =~ Undef {
     fail("Unsupported namevar: ${name}, module ${module_name} when key and type are not defined")
   }
 
   if size($name_parts) == 4 {
-    $options_real = $options ? {
-      'UNSET' => $name_parts[0],
-      default => $options,
-    }
-    $type_real = $type ? {
-      'UNSET' => $name_parts[1],
-      default => $type,
-    }
-    $key_real = $key ? {
-      'UNSET' => $name_parts[2],
-      default => $key,
-    }
+    $options_real = pick($options, $name_parts[0])
+    $type_real = pick($type, $name_parts[1])
+    $key_real = pick($key, $name_parts[2])
     $name_real = $name_parts[3]
   } elsif size($name_parts) == 3 {
-    $options_real = $options ? {
-      'UNSET' => undef,
-      default => $options,
-    }
-    $type_real = $type ? {
-      'UNSET' => $name_parts[0],
-      default => $type,
-    }
-    $key_real = $key ? {
-      'UNSET' => $name_parts[1],
-      default => $key,
-    }
+    $options_real = $options
+    $type_real = pick($type, $name_parts[0])
+    $key_real = pick($key, $name_parts[1])
     $name_real = $name_parts[2]
   } else {
-    $options_real = $options ? {
-      'UNSET' => undef,
-      default => $options,
-    }
+    $options_real = $options
     $type_real = $type
     $key_real = $key
     $name_real = $name
@@ -80,5 +58,4 @@ define root::ssh_authorized_key (
     type    => $type_real,
     user    => 'root',
   }
-
 }
