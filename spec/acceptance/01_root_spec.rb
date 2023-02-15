@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'spec_helper_acceptance'
 
 describe 'root class:' do
-  context 'default parameters' do
+  context 'with default parameters' do
     it 'runs successfully' do
-      pp = <<-EOS
+      pp = <<-PP
         class { 'root': }
-      EOS
+      PP
 
       apply_manifest(pp, catch_failures: true)
       apply_manifest(pp, catch_changes: true)
@@ -40,7 +42,7 @@ describe 'root class:' do
 
   context 'when mailaliases defined' do
     it 'runs successfully' do
-      pp = <<-EOS
+      pp = <<-PP
         package { 'postfix': ensure => present }->
         augeas { 'inet_protocols ipv4':
           changes => 'set inet_protocols ipv4',
@@ -48,7 +50,7 @@ describe 'root class:' do
           incl    => '/etc/postfix/main.cf',
         }->
         class { 'root': mailaliases => [ 'foo@bar.com' ] }
-      EOS
+      PP
 
       apply_manifest(pp, catch_failures: true)
       apply_manifest(pp, catch_changes: true)

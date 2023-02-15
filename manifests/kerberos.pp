@@ -13,7 +13,7 @@ class root::kerberos {
   }
 
   if $kerberos_users_commands_hiera_merge {
-    $_kerberos_users_commands = lookup('root::kerberos_users_commands', Hash, {'strategy' => 'deep', 'merge_hash_arrays' => true}, $kerberos_users_commands)
+    $_kerberos_users_commands = lookup('root::kerberos_users_commands', Hash, { 'strategy' => 'deep', 'merge_hash_arrays' => true }, $kerberos_users_commands)
   } else {
     $_kerberos_users_commands = $kerberos_users_commands
   }

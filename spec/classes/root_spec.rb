@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'root' do
@@ -64,7 +66,7 @@ describe 'root' do
       end
 
       it do
-        is_expected.to contain_file('/root/.ssh/authorized_keys').only_with(ensure: 'present',
+        is_expected.to contain_file('/root/.ssh/authorized_keys').only_with(ensure: 'file',
                                                                             path: '/root/.ssh/authorized_keys',
                                                                             owner: 'root',
                                                                             group: 'root',
@@ -81,17 +83,19 @@ describe 'root' do
         is_expected.to contain_file('/etc/profile.d/root_logout_timeout.sh').with(ensure: 'absent')
       end
 
-      context 'authorized_keys as an Array' do
+      context 'when authorized_keys is an Array' do
         let(:params) { { ssh_authorized_keys: ['ssh-rsa longhashfoo== foo', 'ssh-dss longhashbar== bar'] } }
 
         it { is_expected.to have_root__ssh_authorized_key_resource_count(2) }
         it { is_expected.to contain_root__ssh_authorized_key('ssh-rsa longhashfoo== foo') }
         it { is_expected.to contain_root__ssh_authorized_key('ssh-dss longhashbar== bar') }
+
         it do
           is_expected.to contain_ssh_authorized_key('ssh-rsa longhashfoo== foo').with(name: 'foo',
                                                                                       key: 'longhashfoo==',
                                                                                       type: 'ssh-rsa')
         end
+
         it do
           is_expected.to contain_ssh_authorized_key('ssh-dss longhashbar== bar').with(name: 'bar',
                                                                                       key: 'longhashbar==',
@@ -99,40 +103,44 @@ describe 'root' do
         end
       end
 
-      context 'authorized_keys as a Hash' do
+      context 'when authorized_keys is a Hash' do
         let(:params) do
           { ssh_authorized_keys: {
             'foo' => {
-              'key'   => 'longhashfoo==',
-              'type'  => 'rsa',
+              'key' => 'longhashfoo==',
+              'type' => 'rsa'
             },
             'bar' => {
-              'key'   => 'longhashbar==',
-              'type' => 'dss',
-            },
+              'key' => 'longhashbar==',
+              'type' => 'dss'
+            }
           } }
         end
 
         it { is_expected.to have_root__ssh_authorized_key_resource_count(2) }
+
         it do
           is_expected.to contain_root__ssh_authorized_key('foo').with(key: 'longhashfoo==',
                                                                       type: 'rsa')
         end
+
         it do
           is_expected.to contain_root__ssh_authorized_key('bar').with(key: 'longhashbar==',
                                                                       type: 'dss')
         end
+
         it do
           is_expected.to contain_ssh_authorized_key('foo').with(key: 'longhashfoo==',
                                                                 type: 'rsa')
         end
+
         it do
           is_expected.to contain_ssh_authorized_key('bar').with(key: 'longhashbar==',
                                                                 type: 'dss')
         end
       end
 
-      context "mailaliases => ['foo', 'bar']" do
+      context "when mailaliases => ['foo', 'bar']" do
         let(:params) { { mailaliases: ['foo', 'bar'] } }
 
         it do
@@ -151,6 +159,7 @@ describe 'root' do
                                                                                      group: 'root',
                                                                                      mode: '0644').with_content(%r{^\s*set -r autologout 1$})
         end
+
         it do
           is_expected.to contain_file('/etc/profile.d/root_logout_timeout.sh').with(ensure: 'file',
                                                                                     owner: 'root',
@@ -168,6 +177,7 @@ describe 'root' do
                                                                                      group: 'root',
                                                                                      mode: '0644').with_content(%r{^\s*set -r autologout 1$})
         end
+
         it do
           is_expected.to contain_file('/etc/profile.d/root_logout_timeout.sh').with(ensure: 'file',
                                                                                     owner: 'root',
@@ -185,6 +195,7 @@ describe 'root' do
                                                                                      group: 'root',
                                                                                      mode: '0644').with_content(%r{^\s*set -r autologout 0$})
         end
+
         it do
           is_expected.to contain_file('/etc/profile.d/root_logout_timeout.sh').with(ensure: 'file',
                                                                                     owner: 'root',
@@ -193,7 +204,7 @@ describe 'root' do
         end
       end
 
-      context 'export_key => true' do
+      context 'when export_key => true' do
         let(:params) { { export_key: true } }
         let(:facts) do
           facts.merge(root_sshrsakey: 'somelonghash==')
@@ -208,7 +219,7 @@ describe 'root' do
         end
       end
 
-      context 'collect_exported_keys => true' do
+      context 'when collect_exported_keys => true' do
         let(:params) { { collect_exported_keys: true } }
 
         it { is_expected.to have_root__rsakey__collect_resource_count(1) }
@@ -254,7 +265,7 @@ describe 'root' do
         it 'has valid contents' do
           verify_contents(catalogue, '/root/.k5login', [
                             'user1@EXAMPLE.COM',
-                            'user2@EXAMPLE.COM',
+                            'user2@EXAMPLE.COM'
                           ])
         end
       end
@@ -266,8 +277,8 @@ describe 'root' do
               'user1@EXAMPLE.COM' => ['/foo', '/bar'],
               'user2@EXAMPLE.COM' => '/foo/bar /baz',
               'user3@EXAMPLE.COM' => '',
-              'user4@EXAMPLE.COM' => [],
-            },
+              'user4@EXAMPLE.COM' => []
+            }
           }
         end
 
@@ -276,10 +287,10 @@ describe 'root' do
                             'user1@EXAMPLE.COM /foo /bar',
                             'user2@EXAMPLE.COM /foo/bar /baz',
                             'user3@EXAMPLE.COM ',
-                            'user4@EXAMPLE.COM ',
+                            'user4@EXAMPLE.COM '
                           ])
         end
       end
-    end # end context
-  end # end on_supported_os
-end # end describe
+    end
+  end
+end

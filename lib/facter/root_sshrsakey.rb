@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # root_sshrsakey.rb
 
 Facter.add(:root_sshrsakey) do
@@ -8,7 +10,7 @@ Facter.add(:root_sshrsakey) do
     if FileTest.file?(root_sshrsakey_path)
       begin
         value = Facter::Util::Resolution.exec("cat #{root_sshrsakey_path}").split(%r{\s+})[1]
-      rescue
+      rescue StandardError
         value = nil
       end
     end

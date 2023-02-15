@@ -71,9 +71,9 @@ class root (
   Boolean $purge_ssh_keys                   = true,
   Boolean $export_key                       = false,
   Optional[Array] $export_key_options       = undef,
-  String $export_key_tag                    = $::domain,
+  String $export_key_tag                    = $facts['networking']['domain'],
   Boolean $collect_exported_keys            = false,
-  Array $collect_exported_keys_tags         = [$::domain],
+  Array $collect_exported_keys_tags         = [$facts['networking']['domain']],
   Optional[String] $ssh_private_key_source  = undef,
   Optional[String] $ssh_public_key_source   = undef,
   Boolean $manage_kerberos                  = true,
@@ -83,7 +83,6 @@ class root (
   Hash[String[1], Variant[String, Array]] $kerberos_users_commands = {},
   Optional[Integer[0, default]] $logout_timeout                    = undef,
 ) inherits root::params {
-
   if $mailaliases_hiera_merge {
     $_mailaliases = lookup('root::mailaliases', Array, 'unique', $mailaliases)
   } else {
@@ -109,7 +108,7 @@ class root (
     command     => 'newaliases',
     path        => ['/usr/bin','/usr/sbin','/bin','/sbin'],
     refreshonly => true,
-    onlyif      => 'which newaliases'
+    onlyif      => 'which newaliases',
   }
 
   if $password != undef {
@@ -147,7 +146,7 @@ class root (
     mode   => '0700',
   }
   file { '/root/.ssh/authorized_keys':
-    ensure => 'present',
+    ensure => 'file',
     path   => '/root/.ssh/authorized_keys',
     owner  => 'root',
     group  => 'root',
@@ -155,7 +154,7 @@ class root (
   }
   if $ssh_private_key_source {
     file { '/root/.ssh/id_rsa':
-      ensure    => 'present',
+      ensure    => 'file',
       path      => '/root/.ssh/id_rsa',
       owner     => 'root',
       group     => 'root',
@@ -166,7 +165,7 @@ class root (
   }
   if $ssh_public_key_source {
     file { '/root/.ssh/id_rsa.pub':
-      ensure    => 'present',
+      ensure    => 'file',
       path      => '/root/.ssh/id_rsa.pub',
       owner     => 'root',
       group     => 'root',
@@ -188,20 +187,20 @@ class root (
     $timeout_ensure = 'absent'
   }
 
-  file {'/etc/profile.d/root_logout_timeout.sh':
+  file { '/etc/profile.d/root_logout_timeout.sh':
     ensure  => $timeout_ensure,
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    content =>  template('root/root_logout_timeout.sh.erb')
+    content => template('root/root_logout_timeout.sh.erb'),
   }
 
-  file {'/etc/profile.d/root_logout_timeout.csh':
+  file { '/etc/profile.d/root_logout_timeout.csh':
     ensure  => $timeout_ensure,
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    content =>  template('root/root_logout_timeout.csh.erb')
+    content => template('root/root_logout_timeout.csh.erb'),
   }
 
   if $_ssh_authorized_keys =~ Array {

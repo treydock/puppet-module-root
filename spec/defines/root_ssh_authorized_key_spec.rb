@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'root::ssh_authorized_key' do
@@ -11,7 +13,7 @@ describe 'root::ssh_authorized_key' do
       let(:params) do
         {
           key: 'longhash',
-          type: 'rsa',
+          type: 'rsa'
         }
       end
 
@@ -29,7 +31,7 @@ describe 'root::ssh_authorized_key' do
           {
             key: 'longhash',
             options: ['no-port-forwarding', 'no-pty'],
-            type: 'rsa',
+            type: 'rsa'
           }
         end
 
@@ -66,6 +68,6 @@ describe 'root::ssh_authorized_key' do
           expect { is_expected.to compile }.to raise_error(%r{Unsupported namevar})
         end
       end
-    end # end context
-  end # end on_supported_os
-end # end describe
+    end
+  end
+end
