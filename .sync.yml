@@ -7,12 +7,11 @@
         - el9
         - debian-10
         - debian-11
-        - ubuntu-1804
         - ubuntu-2004
         - ubuntu-2204
       puppet:
-        - puppet6
         - puppet7
+        - puppet8
 .gitlab-ci.yml:
   delete: true
 appveyor.yml:
