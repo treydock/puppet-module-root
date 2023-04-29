@@ -23,8 +23,14 @@
 # @param purge_ssh_keys
 #   Sets if unmanaged SSH keys will be purged for the root account.
 #
+# @param generate_key_type
+#   Type of SSH key to generate when exporting
+#
 # @param export_key
 #   Sets if the root SSH RSA key should be created and exported.
+#
+# @param export_key_type
+#   The ssh_authorized_key type that is exported
 #
 # @param export_key_options
 #   Options to set for the exported SSH RSA key
@@ -38,8 +44,14 @@
 # @param collect_exported_keys_tags
 #   Array of tags for root SSH RSA keys to collect.
 #
+# @param ssh_private_key
+#   Path to root's SSH private key
+#
 # @param ssh_private_key_source
 #   The source for root's SSH RSA private key
+#
+# @param ssh_public_key
+#   Path to root's SSH public key
 #
 # @param ssh_public_key_source
 #   The source for root's SSH RSA public key
@@ -69,12 +81,16 @@ class root (
   Boolean $ssh_authorized_keys_hiera_merge  = true,
   Optional[Variant[String, Sensitive[String]]] $password = undef,
   Boolean $purge_ssh_keys                   = true,
+  Root::SSHKeyTypes $generate_key_type = 'rsa',
   Boolean $export_key                       = false,
+  Optional[Root::SSHKeyTypes] $export_key_type = $generate_key_type,
   Optional[Array] $export_key_options       = undef,
   String $export_key_tag                    = $facts['networking']['domain'],
   Boolean $collect_exported_keys            = false,
   Array $collect_exported_keys_tags         = [$facts['networking']['domain']],
+  Stdlib::Absolutepath $ssh_private_key = '/root/.ssh/id_rsa',
   Optional[String] $ssh_private_key_source  = undef,
+  Stdlib::Absolutepath $ssh_public_key = '/root/.ssh/id_rsa.pub',
   Optional[String] $ssh_public_key_source   = undef,
   Boolean $manage_kerberos                  = true,
   Boolean $kerberos_login_principals_hiera_merge = true,
@@ -153,9 +169,8 @@ class root (
     mode   => '0600',
   }
   if $ssh_private_key_source {
-    file { '/root/.ssh/id_rsa':
+    file { $ssh_private_key:
       ensure    => 'file',
-      path      => '/root/.ssh/id_rsa',
       owner     => 'root',
       group     => 'root',
       mode      => '0600',
@@ -164,9 +179,8 @@ class root (
     }
   }
   if $ssh_public_key_source {
-    file { '/root/.ssh/id_rsa.pub':
+    file { $ssh_public_key:
       ensure    => 'file',
-      path      => '/root/.ssh/id_rsa.pub',
       owner     => 'root',
       group     => 'root',
       mode      => '0600',
@@ -216,12 +230,12 @@ class root (
   }
 
   if $export_key {
-    include root::rsakey::export
-    Class['root'] -> Class['root::rsakey::export']
+    include root::key::export
+    Class['root'] -> Class['root::key::export']
   }
 
   if $collect_exported_keys {
-    root::rsakey::collect { $collect_exported_keys_tags: }
+    root::key::collect { $collect_exported_keys_tags: }
   }
 
   if $manage_kerberos {
