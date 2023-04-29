@@ -34,8 +34,8 @@ describe 'root' do
                                                       purge_ssh_keys: 'true')
       end
 
-      it { is_expected.not_to contain_class('root::rsakey::export') }
-      it { is_expected.to have_root__rsakey__collect_resource_count(0) }
+      it { is_expected.not_to contain_class('root::key::export') }
+      it { is_expected.to have_root__key__collect_resource_count(0) }
 
       it { is_expected.to contain_file('/root/.k5login').with_ensure('absent') }
       it { is_expected.to contain_file('/root/.k5users').with_ensure('absent') }
@@ -210,27 +210,37 @@ describe 'root' do
           facts.merge(root_sshrsakey: 'somelonghash==')
         end
 
-        it { is_expected.to contain_class('root::rsakey::export') }
+        it { is_expected.to contain_class('root::key::export') }
 
         it do
           is_expected.to contain_exec("ssh-keygen root@#{facts[:fqdn]}").with(path: '/usr/bin:/bin:/usr/sbin:/sbin',
                                                                               command: "ssh-keygen -q -t rsa -C root@#{facts[:fqdn]} -N '' -f /root/.ssh/id_rsa",
                                                                               creates: ['/root/.ssh/id_rsa', '/root/.ssh/id_rsa.pub'])
         end
+
+        context 'when key type is ed25519-sk' do
+          let(:params) { { export_key: true, generate_key_type: 'ed25519-sk' } }
+
+          it do
+            is_expected.to contain_exec("ssh-keygen root@#{facts[:fqdn]}").with(path: '/usr/bin:/bin:/usr/sbin:/sbin',
+                                                                                command: "ssh-keygen -q -t ed25519-sk -C root@#{facts[:fqdn]} -N '' -f /root/.ssh/id_ed25519_sk",
+                                                                                creates: ['/root/.ssh/id_ed25519_sk', '/root/.ssh/id_ed25519_sk.pub'])
+          end
+        end
       end
 
       context 'when collect_exported_keys => true' do
         let(:params) { { collect_exported_keys: true } }
 
-        it { is_expected.to have_root__rsakey__collect_resource_count(1) }
-        it { is_expected.to contain_root__rsakey__collect(facts[:domain]) }
+        it { is_expected.to have_root__key__collect_resource_count(1) }
+        it { is_expected.to contain_root__key__collect(facts[:domain]) }
 
         context 'when multiple export_key_tags defined' do
           let(:params) { { collect_exported_keys: true, collect_exported_keys_tags: ['foo', 'bar'] } }
 
-          it { is_expected.to have_root__rsakey__collect_resource_count(2) }
-          it { is_expected.to contain_root__rsakey__collect('foo') }
-          it { is_expected.to contain_root__rsakey__collect('bar') }
+          it { is_expected.to have_root__key__collect_resource_count(2) }
+          it { is_expected.to contain_root__key__collect('foo') }
+          it { is_expected.to contain_root__key__collect('bar') }
         end
       end
 
