@@ -16,18 +16,17 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - ruby: 2.5.9
-            puppet: 6
+          - ruby: 2.7.7
+            puppet: 7
             fixtures: .fixtures.yml
             allow_failure: false
-          - ruby: 2.7.6
-            puppet: 7
+          - ruby: 3.2.2
+            puppet: 8
             fixtures: .fixtures.yml
             allow_failure: false
     env:
       BUNDLE_WITHOUT: system_tests:release
       PUPPET_GEM_VERSION: "~> ${{ matrix.puppet }}.0"
-      FACTER_GEM_VERSION: "< 4.0"
       FIXTURES_YML: ${{ matrix.fixtures }}
     name: Puppet ${{ matrix.puppet }} (Ruby ${{ matrix.ruby }})
     steps:
@@ -54,12 +53,11 @@ jobs:
           - "el9"
           - "debian-10"
           - "debian-11"
-          - "ubuntu-1804"
           - "ubuntu-2004"
           - "ubuntu-2204"
         puppet:
-          - "puppet6"
           - "puppet7"
+          - "puppet8"
     env:
       BUNDLE_WITHOUT: development:release
       BEAKER_debug: true
@@ -74,6 +72,7 @@ jobs:
         run: |
             set -x
             sudo apt-get remove mysql-server --purge
+            sudo apt-get update
             sudo apt-get install apparmor-profiles
             sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
       - uses: actions/checkout@v2
