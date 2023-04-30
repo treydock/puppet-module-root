@@ -7,15 +7,9 @@
 #   An array that defines mailaliases for the root user (defaults to an empty array).
 #   When an empty array is given Mailaliases[root] is set to `ensure => absent`.
 #
-# @param mailaliases_hiera_merge
-#   Boolean that determines if the Hiera lookup merging is used for `root::mailaliases` values.
-#
 # @param ssh_authorized_keys
 #   Defines ssh_autorized_keys to be passed to the `root::ssh_authorized_key` defined type.
 #   See `root::ssh_authorized_key` for examples of valid formats
-#
-# @param ssh_authorized_keys_hiera_merge
-#   Boolean that determines if the Hiera lookup merging `root::ssh_authorized_keys` values.
 #
 # @param password
 #   The password hash used for the root account.
@@ -62,23 +56,15 @@
 # @param manage_kerberos
 #   Boolean that sets if Kerberos files should be managed
 #
-# @param kerberos_login_principals_hiera_merge
-#   Boolean that determines if the Hiera lookup merging `root::kerberos_login_principals` values.
-#
 # @param kerberos_login_principals
 #   The Kerberos principals to write to /root/.k5login
-#
-# @param kerberos_users_commands_hiera_merge
-#   Boolean that determines if the Hiera lookup merging `root::kerberos_users_commands` values.
 #
 # @param kerberos_users_commands
 #   The Kerberos user principals and commands to write to /root/.k5users
 #
 class root (
   Array $mailaliases                        = [],
-  Boolean $mailaliases_hiera_merge          = true,
   Variant[Array, Hash] $ssh_authorized_keys = {},
-  Boolean $ssh_authorized_keys_hiera_merge  = true,
   Optional[Variant[String, Sensitive[String]]] $password = undef,
   Boolean $purge_ssh_keys                   = true,
   Root::SSHKeyTypes $generate_key_type = 'rsa',
@@ -93,31 +79,13 @@ class root (
   Stdlib::Absolutepath $ssh_public_key = '/root/.ssh/id_rsa.pub',
   Optional[String] $ssh_public_key_source   = undef,
   Boolean $manage_kerberos                  = true,
-  Boolean $kerberos_login_principals_hiera_merge = true,
   Array $kerberos_login_principals               = [],
-  Boolean $kerberos_users_commands_hiera_merge   = true,
   Hash[String[1], Variant[String, Array]] $kerberos_users_commands = {},
   Optional[Integer[0, default]] $logout_timeout                    = undef,
 ) inherits root::params {
-  if $mailaliases_hiera_merge {
-    $_mailaliases = lookup('root::mailaliases', Array, 'unique', $mailaliases)
-  } else {
-    $_mailaliases = $mailaliases
-  }
-
-  $mailalias_ensure = empty($_mailaliases) ? {
+  $mailalias_ensure = empty($mailaliases) ? {
     true  => 'absent',
     false => 'present',
-  }
-
-  if $ssh_authorized_keys_hiera_merge {
-    if $ssh_authorized_keys =~ Array {
-      $_ssh_authorized_keys = lookup('root::ssh_authorized_keys', Array, 'unique', $ssh_authorized_keys)
-    } else {
-      $_ssh_authorized_keys = lookup('root::ssh_authorized_keys', Hash, 'deep', $ssh_authorized_keys)
-    }
-  } else {
-    $_ssh_authorized_keys = $ssh_authorized_keys
   }
 
   exec { 'root newaliases':
@@ -191,7 +159,7 @@ class root (
 
   mailalias { 'root':
     ensure    => $mailalias_ensure,
-    recipient => $_mailaliases,
+    recipient => $mailaliases,
     notify    => Exec['root newaliases'],
   }
 
@@ -217,12 +185,12 @@ class root (
     content => template('root/root_logout_timeout.csh.erb'),
   }
 
-  if $_ssh_authorized_keys =~ Array {
-    $_ssh_authorized_keys.each |$key| {
+  if $ssh_authorized_keys =~ Array {
+    $ssh_authorized_keys.each |$key| {
       root::ssh_authorized_key { $key: }
     }
   } else {
-    $_ssh_authorized_keys.each |$name, $data| {
+    $ssh_authorized_keys.each |$name, $data| {
       root::ssh_authorized_key { $name:
         * => $data,
       }

@@ -45,6 +45,31 @@ root::ssh_authorized_keys:
     key: 'somelonghash=='
 ```
 
+If you wish to merge authorized keys from multiple locations:
+
+```yaml
+lookup_options:
+  root::mailaliases:
+    merge: unique
+  root::ssh_authorized_keys:
+    merge: deep
+root::mailaliases:
+  - 'root@example.com'
+root::ssh_authorized_keys:
+  user@fqdn:
+    type: 'ssh-rsa'
+    key: 'somelonghash=='
+# Some other Hiera location:
+root::mailaliases:
+  - 'root@example2.com'
+root::ssh_authorized_keys:
+  user2@fqdn:
+    type: 'ssh-rsa'
+    key: 'somelonghash=='
+```
+
+If you use Arrays for resources like `root::ssh_authorized_keys` then use `unique` merge instead of `deep`.
+
 To export a system's root RSA key
 
 ```yaml
