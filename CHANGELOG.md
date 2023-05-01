@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v6.0.0](https://github.com/treydock/puppet-module-root/tree/v6.0.0) (2023-05-01)
+
+[Full Changelog](https://github.com/treydock/puppet-module-root/compare/v5.1.2...v6.0.0)
+
+### Changed
+
+- BREAKING CHANGE: Remove Hiera merge parameters [\#26](https://github.com/treydock/puppet-module-root/pull/26) ([treydock](https://github.com/treydock))
+- Support Puppet 8, drop Puppet 6 and Ubuntu 18.04 [\#25](https://github.com/treydock/puppet-module-root/pull/25) ([treydock](https://github.com/treydock))
+- Support more root key types, replace root\_sshrsakey fact with root\_ssh\_key.rsa [\#24](https://github.com/treydock/puppet-module-root/pull/24) ([treydock](https://github.com/treydock))
+- Drop Debian 9 support [\#22](https://github.com/treydock/puppet-module-root/pull/22) ([treydock](https://github.com/treydock))
+
+### Added
+
+- Support EL9 and Ubuntu 22.04 [\#23](https://github.com/treydock/puppet-module-root/pull/23) ([treydock](https://github.com/treydock))
+- Modernize unit testing [\#21](https://github.com/treydock/puppet-module-root/pull/21) ([treydock](https://github.com/treydock))
+
 ## [v5.1.2](https://github.com/treydock/puppet-module-root/tree/v5.1.2) (2022-06-21)
 
 [Full Changelog](https://github.com/treydock/puppet-module-root/compare/v5.1.1...v5.1.2)

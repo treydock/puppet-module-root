@@ -13,8 +13,8 @@
 #### Private Classes
 
 * `root::kerberos`: Private class
+* `root::key::export`: Private class
 * `root::params`: Private class
-* `root::rsakey::export`: Private class
 
 ### Defined types
 
@@ -24,7 +24,11 @@
 
 #### Private Defined types
 
-* `root::rsakey::collect`: Private class
+* `root::key::collect`: Private class
+
+### Data types
+
+* [`Root::SSHKeyTypes`](#rootsshkeytypes)
 
 ## Classes
 
@@ -45,23 +49,23 @@ include ::root
 The following parameters are available in the `root` class:
 
 * [`mailaliases`](#mailaliases)
-* [`mailaliases_hiera_merge`](#mailaliases_hiera_merge)
 * [`ssh_authorized_keys`](#ssh_authorized_keys)
-* [`ssh_authorized_keys_hiera_merge`](#ssh_authorized_keys_hiera_merge)
 * [`password`](#password)
 * [`purge_ssh_keys`](#purge_ssh_keys)
+* [`generate_key_type`](#generate_key_type)
 * [`export_key`](#export_key)
+* [`export_key_type`](#export_key_type)
 * [`export_key_options`](#export_key_options)
 * [`export_key_tag`](#export_key_tag)
 * [`collect_exported_keys`](#collect_exported_keys)
 * [`collect_exported_keys_tags`](#collect_exported_keys_tags)
+* [`ssh_private_key`](#ssh_private_key)
 * [`ssh_private_key_source`](#ssh_private_key_source)
+* [`ssh_public_key`](#ssh_public_key)
 * [`ssh_public_key_source`](#ssh_public_key_source)
 * [`logout_timeout`](#logout_timeout)
 * [`manage_kerberos`](#manage_kerberos)
-* [`kerberos_login_principals_hiera_merge`](#kerberos_login_principals_hiera_merge)
 * [`kerberos_login_principals`](#kerberos_login_principals)
-* [`kerberos_users_commands_hiera_merge`](#kerberos_users_commands_hiera_merge)
 * [`kerberos_users_commands`](#kerberos_users_commands)
 
 ##### <a name="mailaliases"></a>`mailaliases`
@@ -73,14 +77,6 @@ When an empty array is given Mailaliases[root] is set to `ensure => absent`.
 
 Default value: `[]`
 
-##### <a name="mailaliases_hiera_merge"></a>`mailaliases_hiera_merge`
-
-Data type: `Boolean`
-
-Boolean that determines if the Hiera lookup merging is used for `root::mailaliases` values.
-
-Default value: ``true``
-
 ##### <a name="ssh_authorized_keys"></a>`ssh_authorized_keys`
 
 Data type: `Variant[Array, Hash]`
@@ -89,14 +85,6 @@ Defines ssh_autorized_keys to be passed to the `root::ssh_authorized_key` define
 See `root::ssh_authorized_key` for examples of valid formats
 
 Default value: `{}`
-
-##### <a name="ssh_authorized_keys_hiera_merge"></a>`ssh_authorized_keys_hiera_merge`
-
-Data type: `Boolean`
-
-Boolean that determines if the Hiera lookup merging `root::ssh_authorized_keys` values.
-
-Default value: ``true``
 
 ##### <a name="password"></a>`password`
 
@@ -114,6 +102,14 @@ Sets if unmanaged SSH keys will be purged for the root account.
 
 Default value: ``true``
 
+##### <a name="generate_key_type"></a>`generate_key_type`
+
+Data type: `Root::SSHKeyTypes`
+
+Type of SSH key to generate when exporting
+
+Default value: `'rsa'`
+
 ##### <a name="export_key"></a>`export_key`
 
 Data type: `Boolean`
@@ -121,6 +117,14 @@ Data type: `Boolean`
 Sets if the root SSH RSA key should be created and exported.
 
 Default value: ``false``
+
+##### <a name="export_key_type"></a>`export_key_type`
+
+Data type: `Optional[Root::SSHKeyTypes]`
+
+The ssh_authorized_key type that is exported
+
+Default value: `$generate_key_type`
 
 ##### <a name="export_key_options"></a>`export_key_options`
 
@@ -136,7 +140,7 @@ Data type: `String`
 
 The tag to use when exporting the root SSH RSA key.
 
-Default value: `$::domain`
+Default value: `$facts['networking']['domain']`
 
 ##### <a name="collect_exported_keys"></a>`collect_exported_keys`
 
@@ -152,7 +156,15 @@ Data type: `Array`
 
 Array of tags for root SSH RSA keys to collect.
 
-Default value: `[$::domain]`
+Default value: `[$facts['networking']['domain']]`
+
+##### <a name="ssh_private_key"></a>`ssh_private_key`
+
+Data type: `Stdlib::Absolutepath`
+
+Path to root's SSH private key
+
+Default value: `'/root/.ssh/id_rsa'`
 
 ##### <a name="ssh_private_key_source"></a>`ssh_private_key_source`
 
@@ -161,6 +173,14 @@ Data type: `Optional[String]`
 The source for root's SSH RSA private key
 
 Default value: ``undef``
+
+##### <a name="ssh_public_key"></a>`ssh_public_key`
+
+Data type: `Stdlib::Absolutepath`
+
+Path to root's SSH public key
+
+Default value: `'/root/.ssh/id_rsa.pub'`
 
 ##### <a name="ssh_public_key_source"></a>`ssh_public_key_source`
 
@@ -186,14 +206,6 @@ Boolean that sets if Kerberos files should be managed
 
 Default value: ``true``
 
-##### <a name="kerberos_login_principals_hiera_merge"></a>`kerberos_login_principals_hiera_merge`
-
-Data type: `Boolean`
-
-Boolean that determines if the Hiera lookup merging `root::kerberos_login_principals` values.
-
-Default value: ``true``
-
 ##### <a name="kerberos_login_principals"></a>`kerberos_login_principals`
 
 Data type: `Array`
@@ -201,14 +213,6 @@ Data type: `Array`
 The Kerberos principals to write to /root/.k5login
 
 Default value: `[]`
-
-##### <a name="kerberos_users_commands_hiera_merge"></a>`kerberos_users_commands_hiera_merge`
-
-Data type: `Boolean`
-
-Boolean that determines if the Hiera lookup merging `root::kerberos_users_commands` values.
-
-Default value: ``true``
 
 ##### <a name="kerberos_users_commands"></a>`kerberos_users_commands`
 
@@ -252,7 +256,7 @@ The following parameters are available in the `root::ssh_authorized_key` defined
 
 ##### <a name="ensure"></a>`ensure`
 
-Data type: `Any`
+Data type: `Enum['present','absent']`
 
 ssh_authorized_key ensure property
 
@@ -260,25 +264,37 @@ Default value: `'present'`
 
 ##### <a name="key"></a>`key`
 
-Data type: `Any`
+Data type: `Optional[String[1]]`
 
 The SSH key hash
 
-Default value: `'UNSET'`
+Default value: ``undef``
 
 ##### <a name="options"></a>`options`
 
-Data type: `Any`
+Data type: `Optional[Variant[String[1], Array]]`
 
 The SSH key options
 
-Default value: `'UNSET'`
+Default value: ``undef``
 
 ##### <a name="type"></a>`type`
 
-Data type: `Any`
+Data type: `Optional[String[1]]`
 
 The type of SSH key.
 
-Default value: `'UNSET'`
+Default value: ``undef``
+
+## Data types
+
+### <a name="rootsshkeytypes"></a>`Root::SSHKeyTypes`
+
+The Root::SSHKeyTypes data type.
+
+Alias of
+
+```puppet
+Enum['dsa', 'rsa', 'ecdsa', 'ecdsa-sk', 'ed25519', 'ed25519-sk']
+```
 

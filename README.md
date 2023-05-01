@@ -76,6 +76,13 @@ To export a system's root RSA key
 root::export_key: true
 ```
 
+To generate and export a different root SSH key:
+
+```yaml
+root::generate_key_type: ecdsa-sk
+root::export_key_type: "%{lookup('root::generate_key_type')}"
+```
+
 To collect exported root RSA keys from multiple tags
 
 ```yaml
