@@ -6,7 +6,7 @@
 <title>
   Defined Type: root::ssh_authorized_key
   
-    &mdash; Documentation by YARD 0.9.27
+    &mdash; Documentation by YARD 0.9.28
   
 </title>
 
@@ -111,7 +111,7 @@
         <span class='name'>ensure</span>
       
       
-        <span class='type'>(<tt>Any</tt>)</span>
+        <span class='type'>(<tt>Enum['present','absent']</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>&#39;present&#39;</tt>)</em>
@@ -129,10 +129,10 @@
         <span class='name'>key</span>
       
       
-        <span class='type'>(<tt>Any</tt>)</span>
+        <span class='type'>(<tt>Optional[String[1]]</tt>)</span>
       
       
-        <em class="default">(defaults to: <tt>&#39;UNSET&#39;</tt>)</em>
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
       
       
         &mdash;
@@ -147,10 +147,10 @@
         <span class='name'>options</span>
       
       
-        <span class='type'>(<tt>Any</tt>)</span>
+        <span class='type'>(<tt>Optional[Variant[String[1], Array]]</tt>)</span>
       
       
-        <em class="default">(defaults to: <tt>&#39;UNSET&#39;</tt>)</em>
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
       
       
         &mdash;
@@ -165,10 +165,10 @@
         <span class='name'>type</span>
       
       
-        <span class='type'>(<tt>Any</tt>)</span>
+        <span class='type'>(<tt>Optional[String[1]]</tt>)</span>
       
       
-        <em class="default">(defaults to: <tt>&#39;UNSET&#39;</tt>)</em>
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
       
       
         &mdash;
@@ -226,80 +226,35 @@
 58
 59
 60
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72
-73
-74
-75
-76
-77
-78
-79
-80
-81
-82
-83
-84</pre>
+61</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/ssh_authorized_key.pp', line 24</span>
 
 define root::ssh_authorized_key (
-  $ensure = &#39;present&#39;,
-  $key = &#39;UNSET&#39;,
-  $options = &#39;UNSET&#39;,
-  $type = &#39;UNSET&#39;,
+  Enum[&#39;present&#39;,&#39;absent&#39;] $ensure = &#39;present&#39;,
+  Optional[String[1]] $key = undef,
+  Optional[Variant[String[1], Array]] $options = undef,
+  Optional[String[1]] $type = undef,
 ) {
-
   $name_parts = split($name, &#39; &#39;)
 
-  if size($name_parts) &lt; 3 and $key == &#39;UNSET&#39; and $type == &#39;UNSET&#39; {
+  if size($name_parts) &lt; 3 and $key =~ Undef and $type =~ Undef {
     fail(&quot;Unsupported namevar: ${name}, module ${module_name} when key and type are not defined&quot;)
   }
 
   if size($name_parts) == 4 {
-    $options_real = $options ? {
-      &#39;UNSET&#39; =&gt; $name_parts[0],
-      default =&gt; $options,
-    }
-    $type_real = $type ? {
-      &#39;UNSET&#39; =&gt; $name_parts[1],
-      default =&gt; $type,
-    }
-    $key_real = $key ? {
-      &#39;UNSET&#39; =&gt; $name_parts[2],
-      default =&gt; $key,
-    }
+    $options_real = pick($options, $name_parts[0])
+    $type_real = pick($type, $name_parts[1])
+    $key_real = pick($key, $name_parts[2])
     $name_real = $name_parts[3]
   } elsif size($name_parts) == 3 {
-    $options_real = $options ? {
-      &#39;UNSET&#39; =&gt; undef,
-      default =&gt; $options,
-    }
-    $type_real = $type ? {
-      &#39;UNSET&#39; =&gt; $name_parts[0],
-      default =&gt; $type,
-    }
-    $key_real = $key ? {
-      &#39;UNSET&#39; =&gt; $name_parts[1],
-      default =&gt; $key,
-    }
+    $options_real = $options
+    $type_real = pick($type, $name_parts[0])
+    $key_real = pick($key, $name_parts[1])
     $name_real = $name_parts[2]
   } else {
-    $options_real = $options ? {
-      &#39;UNSET&#39; =&gt; undef,
-      default =&gt; $options,
-    }
+    $options_real = $options
     $type_real = $type
     $key_real = $key
     $name_real = $name
@@ -313,7 +268,6 @@ define root::ssh_authorized_key (
     type    =&gt; $type_real,
     user    =&gt; &#39;root&#39;,
   }
-
 }</pre>
       </td>
     </tr>

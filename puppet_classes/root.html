@@ -6,7 +6,7 @@
 <title>
   Puppet Class: root
   
-    &mdash; Documentation by YARD 0.9.27
+    &mdash; Documentation by YARD 0.9.28
   
 </title>
 
@@ -112,28 +112,7 @@
       
         &mdash;
         <div class='inline'>
-<p>An array that defines mailaliases for the root user (defaults to an empty
-array). When an empty array is given <a href="root">Mailaliases</a> is set
-to <code>ensure =&gt; absent</code>.</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>mailaliases_hiera_merge</span>
-      
-      
-        <span class='type'>(<tt>Boolean</tt>)</span>
-      
-      
-        <em class="default">(defaults to: <tt>true</tt>)</em>
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>Boolean that determines if the Hiera lookup merging is used for
-<code>root::mailaliases</code> values.</p>
+<p>An array that defines mailaliases for the root user (defaults to an empty array). When an empty array is given <a href="root">Mailaliases</a> is set to <code>ensure =&gt; absent</code>.</p>
 </div>
       
     </li>
@@ -151,28 +130,7 @@ to <code>ensure =&gt; absent</code>.</p>
       
         &mdash;
         <div class='inline'>
-<p>Defines ssh_autorized_keys to be passed to the
-<code>root::ssh_authorized_key</code> defined type. See
-<code>root::ssh_authorized_key</code> for examples of valid formats</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>ssh_authorized_keys_hiera_merge</span>
-      
-      
-        <span class='type'>(<tt>Boolean</tt>)</span>
-      
-      
-        <em class="default">(defaults to: <tt>true</tt>)</em>
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>Boolean that determines if the Hiera lookup merging
-<code>root::ssh_authorized_keys</code> values.</p>
+<p>Defines ssh_autorized_keys to be passed to the <code>root::ssh_authorized_key</code> defined type. See <code>root::ssh_authorized_key</code> for examples of valid formats</p>
 </div>
       
     </li>
@@ -215,6 +173,24 @@ to <code>ensure =&gt; absent</code>.</p>
   
     <li>
       
+        <span class='name'>generate_key_type</span>
+      
+      
+        <span class='type'>(<tt>Root::SSHKeyTypes</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&#39;rsa&#39;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Type of SSH key to generate when exporting</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
         <span class='name'>export_key</span>
       
       
@@ -227,6 +203,24 @@ to <code>ensure =&gt; absent</code>.</p>
         &mdash;
         <div class='inline'>
 <p>Sets if the root SSH RSA key should be created and exported.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>export_key_type</span>
+      
+      
+        <span class='type'>(<tt>Optional[Root::SSHKeyTypes]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>$generate_key_type</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The ssh_authorized_key type that is exported</p>
 </div>
       
     </li>
@@ -257,7 +251,7 @@ to <code>ensure =&gt; absent</code>.</p>
         <span class='type'>(<tt>String</tt>)</span>
       
       
-        <em class="default">(defaults to: <tt>$::domain</tt>)</em>
+        <em class="default">(defaults to: <tt>$facts[&#39;networking&#39;][&#39;domain&#39;]</tt>)</em>
       
       
         &mdash;
@@ -293,12 +287,30 @@ to <code>ensure =&gt; absent</code>.</p>
         <span class='type'>(<tt>Array</tt>)</span>
       
       
-        <em class="default">(defaults to: <tt>[$::domain]</tt>)</em>
+        <em class="default">(defaults to: <tt>[$facts[&#39;networking&#39;][&#39;domain&#39;]]</tt>)</em>
       
       
         &mdash;
         <div class='inline'>
 <p>Array of tags for root SSH RSA keys to collect.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>ssh_private_key</span>
+      
+      
+        <span class='type'>(<tt>Stdlib::Absolutepath</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&#39;/root/.ssh/id_rsa&#39;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Path to root&#39;s SSH private key</p>
 </div>
       
     </li>
@@ -317,6 +329,24 @@ to <code>ensure =&gt; absent</code>.</p>
         &mdash;
         <div class='inline'>
 <p>The source for root&#39;s SSH RSA private key</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>ssh_public_key</span>
+      
+      
+        <span class='type'>(<tt>Stdlib::Absolutepath</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&#39;/root/.ssh/id_rsa.pub&#39;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Path to root&#39;s SSH public key</p>
 </div>
       
     </li>
@@ -377,25 +407,6 @@ to <code>ensure =&gt; absent</code>.</p>
   
     <li>
       
-        <span class='name'>kerberos_login_principals_hiera_merge</span>
-      
-      
-        <span class='type'>(<tt>Boolean</tt>)</span>
-      
-      
-        <em class="default">(defaults to: <tt>true</tt>)</em>
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>Boolean that determines if the Hiera lookup merging
-<code>root::kerberos_login_principals</code> values.</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
         <span class='name'>kerberos_login_principals</span>
       
       
@@ -408,25 +419,6 @@ to <code>ensure =&gt; absent</code>.</p>
         &mdash;
         <div class='inline'>
 <p>The Kerberos principals to write to /root/.k5login</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>kerberos_users_commands_hiera_merge</span>
-      
-      
-        <span class='type'>(<tt>Boolean</tt>)</span>
-      
-      
-        <em class="default">(defaults to: <tt>true</tt>)</em>
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>Boolean that determines if the Hiera lookup merging
-<code>root::kerberos_users_commands</code> values.</p>
 </div>
       
     </li>
@@ -607,78 +599,42 @@ to <code>ensure =&gt; absent</code>.</p>
 209
 210
 211
-212
-213
-214
-215
-216
-217
-218
-219
-220
-221
-222
-223
-224
-225
-226
-227
-228
-229
-230
-231</pre>
+212</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/init.pp', line 65</span>
 
 class root (
   Array $mailaliases                        = [],
-  Boolean $mailaliases_hiera_merge          = true,
   Variant[Array, Hash] $ssh_authorized_keys = {},
-  Boolean $ssh_authorized_keys_hiera_merge  = true,
   Optional[Variant[String, Sensitive[String]]] $password = undef,
   Boolean $purge_ssh_keys                   = true,
+  Root::SSHKeyTypes $generate_key_type = &#39;rsa&#39;,
   Boolean $export_key                       = false,
+  Optional[Root::SSHKeyTypes] $export_key_type = $generate_key_type,
   Optional[Array] $export_key_options       = undef,
-  String $export_key_tag                    = $::domain,
+  String $export_key_tag                    = $facts[&#39;networking&#39;][&#39;domain&#39;],
   Boolean $collect_exported_keys            = false,
-  Array $collect_exported_keys_tags         = [$::domain],
+  Array $collect_exported_keys_tags         = [$facts[&#39;networking&#39;][&#39;domain&#39;]],
+  Stdlib::Absolutepath $ssh_private_key = &#39;/root/.ssh/id_rsa&#39;,
   Optional[String] $ssh_private_key_source  = undef,
+  Stdlib::Absolutepath $ssh_public_key = &#39;/root/.ssh/id_rsa.pub&#39;,
   Optional[String] $ssh_public_key_source   = undef,
   Boolean $manage_kerberos                  = true,
-  Boolean $kerberos_login_principals_hiera_merge = true,
   Array $kerberos_login_principals               = [],
-  Boolean $kerberos_users_commands_hiera_merge   = true,
   Hash[String[1], Variant[String, Array]] $kerberos_users_commands = {},
   Optional[Integer[0, default]] $logout_timeout                    = undef,
 ) inherits root::params {
-
-  if $mailaliases_hiera_merge {
-    $_mailaliases = lookup(&#39;root::mailaliases&#39;, Array, &#39;unique&#39;, $mailaliases)
-  } else {
-    $_mailaliases = $mailaliases
-  }
-
-  $mailalias_ensure = empty($_mailaliases) ? {
+  $mailalias_ensure = empty($mailaliases) ? {
     true  =&gt; &#39;absent&#39;,
     false =&gt; &#39;present&#39;,
-  }
-
-  if $ssh_authorized_keys_hiera_merge {
-    if $ssh_authorized_keys =~ Array {
-      $_ssh_authorized_keys = lookup(&#39;root::ssh_authorized_keys&#39;, Array, &#39;unique&#39;, $ssh_authorized_keys)
-    } else {
-      $_ssh_authorized_keys = lookup(&#39;root::ssh_authorized_keys&#39;, Hash, &#39;deep&#39;, $ssh_authorized_keys)
-    }
-  } else {
-    $_ssh_authorized_keys = $ssh_authorized_keys
   }
 
   exec { &#39;root newaliases&#39;:
     command     =&gt; &#39;newaliases&#39;,
     path        =&gt; [&#39;/usr/bin&#39;,&#39;/usr/sbin&#39;,&#39;/bin&#39;,&#39;/sbin&#39;],
     refreshonly =&gt; true,
-    onlyif      =&gt; &#39;which newaliases&#39;
+    onlyif      =&gt; &#39;which newaliases&#39;,
   }
 
   if $password != undef {
@@ -716,16 +672,15 @@ class root (
     mode   =&gt; &#39;0700&#39;,
   }
   file { &#39;/root/.ssh/authorized_keys&#39;:
-    ensure =&gt; &#39;present&#39;,
+    ensure =&gt; &#39;file&#39;,
     path   =&gt; &#39;/root/.ssh/authorized_keys&#39;,
     owner  =&gt; &#39;root&#39;,
     group  =&gt; &#39;root&#39;,
     mode   =&gt; &#39;0600&#39;,
   }
   if $ssh_private_key_source {
-    file { &#39;/root/.ssh/id_rsa&#39;:
-      ensure    =&gt; &#39;present&#39;,
-      path      =&gt; &#39;/root/.ssh/id_rsa&#39;,
+    file { $ssh_private_key:
+      ensure    =&gt; &#39;file&#39;,
       owner     =&gt; &#39;root&#39;,
       group     =&gt; &#39;root&#39;,
       mode      =&gt; &#39;0600&#39;,
@@ -734,9 +689,8 @@ class root (
     }
   }
   if $ssh_public_key_source {
-    file { &#39;/root/.ssh/id_rsa.pub&#39;:
-      ensure    =&gt; &#39;present&#39;,
-      path      =&gt; &#39;/root/.ssh/id_rsa.pub&#39;,
+    file { $ssh_public_key:
+      ensure    =&gt; &#39;file&#39;,
       owner     =&gt; &#39;root&#39;,
       group     =&gt; &#39;root&#39;,
       mode      =&gt; &#39;0600&#39;,
@@ -747,7 +701,7 @@ class root (
 
   mailalias { &#39;root&#39;:
     ensure    =&gt; $mailalias_ensure,
-    recipient =&gt; $_mailaliases,
+    recipient =&gt; $mailaliases,
     notify    =&gt; Exec[&#39;root newaliases&#39;],
   }
 
@@ -757,28 +711,28 @@ class root (
     $timeout_ensure = &#39;absent&#39;
   }
 
-  file {&#39;/etc/profile.d/root_logout_timeout.sh&#39;:
+  file { &#39;/etc/profile.d/root_logout_timeout.sh&#39;:
     ensure  =&gt; $timeout_ensure,
     owner   =&gt; &#39;root&#39;,
     group   =&gt; &#39;root&#39;,
     mode    =&gt; &#39;0644&#39;,
-    content =&gt;  template(&#39;root/root_logout_timeout.sh.erb&#39;)
+    content =&gt; template(&#39;root/root_logout_timeout.sh.erb&#39;),
   }
 
-  file {&#39;/etc/profile.d/root_logout_timeout.csh&#39;:
+  file { &#39;/etc/profile.d/root_logout_timeout.csh&#39;:
     ensure  =&gt; $timeout_ensure,
     owner   =&gt; &#39;root&#39;,
     group   =&gt; &#39;root&#39;,
     mode    =&gt; &#39;0644&#39;,
-    content =&gt;  template(&#39;root/root_logout_timeout.csh.erb&#39;)
+    content =&gt; template(&#39;root/root_logout_timeout.csh.erb&#39;),
   }
 
-  if $_ssh_authorized_keys =~ Array {
-    $_ssh_authorized_keys.each |$key| {
+  if $ssh_authorized_keys =~ Array {
+    $ssh_authorized_keys.each |$key| {
       root::ssh_authorized_key { $key: }
     }
   } else {
-    $_ssh_authorized_keys.each |$name, $data| {
+    $ssh_authorized_keys.each |$name, $data| {
       root::ssh_authorized_key { $name:
         * =&gt; $data,
       }
@@ -786,12 +740,12 @@ class root (
   }
 
   if $export_key {
-    include root::rsakey::export
-    Class[&#39;root&#39;] -&gt; Class[&#39;root::rsakey::export&#39;]
+    include root::key::export
+    Class[&#39;root&#39;] -&gt; Class[&#39;root::key::export&#39;]
   }
 
   if $collect_exported_keys {
-    root::rsakey::collect { $collect_exported_keys_tags: }
+    root::key::collect { $collect_exported_keys_tags: }
   }
 
   if $manage_kerberos {

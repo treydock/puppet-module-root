@@ -6,7 +6,7 @@
 <title>
   Puppet Class: root::params
   
-    &mdash; Documentation by YARD 0.9.27
+    &mdash; Documentation by YARD 0.9.28
   
 </title>
 
@@ -112,25 +112,21 @@
 10
 11
 12
-13
-14
-15</pre>
+13</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/params.pp', line 3</span>
 
 class root::params {
-
-  case $::kernel {
+  case $facts[&#39;kernel&#39;] {
     &#39;Linux&#39;: {
       # Do nothing
     }
 
     default: {
-      fail(&quot;Unsupported kernel: ${::kernel}, module ${module_name} only support kernel Linux&quot;)
+      fail(&quot;Unsupported kernel: ${facts[&#39;kernel&#39;]}, module ${module_name} only support kernel Linux&quot;)
     }
   }
-
 }</pre>
       </td>
     </tr>

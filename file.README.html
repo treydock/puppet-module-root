@@ -6,7 +6,7 @@
 <title>
   File: README
   
-    &mdash; Documentation by YARD 0.9.27
+    &mdash; Documentation by YARD 0.9.28
   
 </title>
 
@@ -58,12 +58,9 @@
       </div>
 
       <div id="content"><div id='filecontents'>
-<h1 id="label-puppet-root">puppet-root</h1>
+<h1 id="label-puppet-module-root">puppet-module-root</h1>
 
-<p><a href="https://forge.puppetlabs.com/treydock/root"><img
-src="http://img.shields.io/puppetforge/v/treydock/root.svg"></a> <a
-href="https://travis-ci.org/treydock/puppet-module-root"><img
-src="https://travis-ci.org/treydock/puppet-module-root.svg?branch=master"></a></p>
+<p><a href="https://forge.puppetlabs.com/treydock/root"><img src="http://img.shields.io/puppetforge/v/treydock/root.svg"></a> <a href="https://github.com/treydock/puppet-module-root/actions?query=workflow%3ACI"><img src="https://github.com/treydock/puppet-module-root/workflows/CI/badge.svg?branch=master"></a></p>
 
 <h4 id="label-Table+of+Contents">Table of Contents</h4>
 <ol><li>
@@ -71,33 +68,25 @@ src="https://travis-ci.org/treydock/puppet-module-root.svg?branch=master"></a></
 </li><li>
 <p><a href="#usage">Usage - Configuration options</a></p>
 </li><li>
-<p><a href="#reference">Reference - Parameter and detailed reference to all
-options</a></p>
-</li><li>
-<p><a href="#limitations">Limitations - OS compatibility, etc.</a></p>
-</li><li>
-<p><a href="#development">Development - Guide for contributing to the
-module</a></p>
+<p><a href="#reference">Reference - Parameter and detailed reference to all options</a></p>
 </li></ol>
 
 <h2 id="label-Overview">Overview</h2>
 
 <p>This module manages the Linux root user.</p>
 
-<p>Puppet 6 has soft dependencies on the following modules:</p>
+<p>This module has soft dependencies on the following modules:</p>
 <ul><li>
-<p><a
-href="https://forge.puppet.com/puppetlabs/mailalias_core">puppetlabs/mailalias_core</a></p>
+<p><a href="https://forge.puppet.com/puppetlabs/mailalias_core">puppetlabs/mailalias_core</a></p>
 </li><li>
-<p><a
-href="https://forge.puppet.com/puppetlabs/sshkeys_core">puppetlabs/sshkeys_core</a></p>
+<p><a href="https://forge.puppet.com/puppetlabs/sshkeys_core">puppetlabs/sshkeys_core</a></p>
 </li></ul>
 
 <h2 id="label-Usage">Usage</h2>
 
 <h3 id="label-root">root</h3>
 
-<pre class="code ruby"><code class="ruby">include ::root
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_include'>include</span> <span class='id identifier rubyid_root'>root</span>
 </code></pre>
 
 <p>Manage root and define mailaliases, ssh_authorized_keys and set a password.</p>
@@ -117,16 +106,46 @@ root::ssh_authorized_keys:
     key: &#39;somelonghash==&#39;
 </code></pre>
 
+<p>If you wish to merge authorized keys from multiple locations:</p>
+
+<pre class="code ruby"><code class="ruby">lookup_options:
+  root::mailaliases:
+    merge: unique
+  root::ssh_authorized_keys:
+    merge: deep
+root::mailaliases:
+  - &#39;root@example.com&#39;
+root::ssh_authorized_keys:
+  user@fqdn:
+    type: &#39;ssh-rsa&#39;
+    key: &#39;somelonghash==&#39;
+# Some other Hiera location:
+root::mailaliases:
+  - &#39;root@example2.com&#39;
+root::ssh_authorized_keys:
+  user2@fqdn:
+    type: &#39;ssh-rsa&#39;
+    key: &#39;somelonghash==&#39;
+</code></pre>
+
+<p>If you use Arrays for resources like <code>root::ssh_authorized_keys</code> then use <code>unique</code> merge instead of <code>deep</code>.</p>
+
 <p>To export a system&#39;s root RSA key</p>
 
 <pre class="code ruby"><code class="ruby">root::export_key: true
+</code></pre>
+
+<p>To generate and export a different root SSH key:</p>
+
+<pre class="code ruby"><code class="ruby">root::generate_key_type: ecdsa-sk
+root::export_key_type: &quot;%{lookup(&#39;root::generate_key_type&#39;)}&quot;
 </code></pre>
 
 <p>To collect exported root RSA keys from multiple tags</p>
 
 <pre class="code ruby"><code class="ruby">root::collect_exported_keys: true
 root::collect_exported_keys_tags:
-  - &quot;${::domain}&quot;
+  - &quot;%{facts.domain}&quot;
   - &#39;foo&#39;
 </code></pre>
 
@@ -137,9 +156,7 @@ root::collect_exported_keys_tags:
   - user2@EXAMPLE.COM
 </code></pre>
 
-<p>Add Kerberos principals and commands to <code>/root/.k5users</code>. Note
-that user3 and user4 will not have commands defined. The examples also
-illustrate defining commands as strings or arrays.</p>
+<p>Add Kerberos principals and commands to <code>/root/.k5users</code>. Note that user3 and user4 will not have commands defined. The examples also illustrate defining commands as strings or arrays.</p>
 
 <pre class="code ruby"><code class="ruby">root::kerberos_users_commands:
   user1@EXAMPLE.COM:
@@ -150,8 +167,7 @@ illustrate defining commands as strings or arrays.</p>
   user4@EXAMPLE.COM: []
 </code></pre>
 
-<p>If a different module manages Kerberos for root, disable Kerberos in this
-module:</p>
+<p>If a different module manages Kerberos for root, disable Kerberos in this module:</p>
 
 <pre class="code ruby"><code class="ruby">root::manage_kerberos: false
 </code></pre>
@@ -163,43 +179,7 @@ module:</p>
 
 <h2 id="label-Reference">Reference</h2>
 
-<p><a
-href="http://treydock.github.io/puppet-module-root/">treydock.github.io/puppet-module-root/</a></p>
-
-<h2 id="label-Limitations">Limitations</h2>
-
-<p>This module has been tested on:</p>
-<ul><li>
-<p>RedHat &amp; CentOS 6 x86_64</p>
-</li><li>
-<p>RedHat &amp; CentOS 7 x86_64</p>
-</li></ul>
-
-<h2 id="label-Development">Development</h2>
-
-<h3 id="label-Testing">Testing</h3>
-
-<p>Testing requires the following dependencies:</p>
-<ul><li>
-<p>rake</p>
-</li><li>
-<p>bundler</p>
-</li></ul>
-
-<p>Install gem dependencies</p>
-
-<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_bundle'>bundle</span> <span class='id identifier rubyid_install'>install</span>
-</code></pre>
-
-<p>Run unit tests</p>
-
-<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_bundle'>bundle</span> <span class='id identifier rubyid_exec'>exec</span> <span class='id identifier rubyid_rake'>rake</span> <span class='id identifier rubyid_test'>test</span>
-</code></pre>
-
-<p>If you have Vagrant &gt;= 1.2.0 installed you can run system tests</p>
-
-<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_bundle'>bundle</span> <span class='id identifier rubyid_exec'>exec</span> <span class='id identifier rubyid_rake'>rake</span> <span class='id identifier rubyid_acceptance'>acceptance</span>
-</code></pre>
+<p><a href="http://treydock.github.io/puppet-module-root/">treydock.github.io/puppet-module-root/</a></p>
 </div></div>
 
       <div id="footer">
