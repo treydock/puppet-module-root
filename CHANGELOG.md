@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v6.1.0](https://github.com/treydock/puppet-module-root/tree/v6.1.0) (2023-06-16)
+
+[Full Changelog](https://github.com/treydock/puppet-module-root/compare/v6.0.0...v6.1.0)
+
+### Added
+
+- Note compatibility with stdlib 9.x [\#28](https://github.com/treydock/puppet-module-root/pull/28) ([jcpunk](https://github.com/jcpunk))
+
 ## [v6.0.0](https://github.com/treydock/puppet-module-root/tree/v6.0.0) (2023-05-01)
 
 [Full Changelog](https://github.com/treydock/puppet-module-root/compare/v5.1.2...v6.0.0)
