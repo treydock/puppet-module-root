@@ -16,11 +16,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - ruby: 2.7.7
+          - ruby: 2.7.8
             puppet: 7
             fixtures: .fixtures.yml
             allow_failure: false
-          - ruby: 3.2.2
+          - ruby: 3.2.3
             puppet: 8
             fixtures: .fixtures.yml
             allow_failure: false
@@ -30,7 +30,7 @@ jobs:
       FIXTURES_YML: ${{ matrix.fixtures }}
     name: Puppet ${{ matrix.puppet }} (Ruby ${{ matrix.ruby }})
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -48,9 +48,9 @@ jobs:
       fail-fast: false
       matrix:
         set:
-          - "el7"
           - "el8"
           - "el9"
+          - "el7"
           - "debian-10"
           - "debian-11"
           - "ubuntu-2004"
@@ -75,7 +75,7 @@ jobs:
             sudo apt-get update
             sudo apt-get install apparmor-profiles
             sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup ruby
         uses: ruby/setup-ruby@v1
         with:
