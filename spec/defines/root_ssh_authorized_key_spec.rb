@@ -3,12 +3,8 @@
 require 'spec_helper'
 
 describe 'root::ssh_authorized_key' do
-  on_supported_os.each do |os, facts|
+  on_supported_os.each_key do |os|
     context "with #{os}" do
-      let(:facts) do
-        facts.merge(puppetversion: Puppet.version)
-      end
-
       let(:title) { 'foo' }
       let(:params) do
         {

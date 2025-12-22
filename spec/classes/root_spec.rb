@@ -1,12 +1,20 @@
 # frozen_string_literal: true
 
+# it { pp catalogue.resources }
+
 require 'spec_helper'
 
 describe 'root' do
-  on_supported_os.each do |os, facts|
+  on_supported_os.each do |os, os_facts|
     context "with #{os}" do
       let(:facts) do
-        facts.merge(puppetversion: Puppet.version)
+        os_facts.merge(
+          networking: os_facts[:networking].merge(
+            hostname: 'foo',
+            domain: 'example.com',
+            fqdn: 'foo.example.com',
+          ),
+        )
       end
 
       it { is_expected.to compile.with_all_deps }
@@ -207,24 +215,31 @@ describe 'root' do
       context 'when export_key => true' do
         let(:params) { { export_key: true } }
         let(:facts) do
-          facts.merge(root_sshrsakey: 'somelonghash==')
+          os_facts.merge(root_sshrsakey: 'somelonghash==',
+                         networking: os_facts[:networking].merge(
+                           hostname: 'foo',
+                           domain: 'example.com',
+                           fqdn: 'foo.example.com',
+                         ),)
         end
 
         it { is_expected.to contain_class('root::key::export') }
 
         it do
-          is_expected.to contain_exec("ssh-keygen root@#{facts[:fqdn]}").with(path: '/usr/bin:/bin:/usr/sbin:/sbin',
-                                                                              command: "ssh-keygen -q -t rsa -C root@#{facts[:fqdn]} -N '' -f /root/.ssh/id_rsa",
-                                                                              creates: ['/root/.ssh/id_rsa', '/root/.ssh/id_rsa.pub'],)
+          is_expected.to contain_exec("ssh-keygen root@#{facts[:networking][:fqdn]}")
+            .with(path: '/usr/bin:/bin:/usr/sbin:/sbin',
+                  command: "ssh-keygen -q -t rsa -C root@#{facts[:networking][:fqdn]} -N '' -f /root/.ssh/id_rsa",
+                  creates: ['/root/.ssh/id_rsa', '/root/.ssh/id_rsa.pub'],)
         end
 
         context 'when key type is ed25519-sk' do
           let(:params) { { export_key: true, generate_key_type: 'ed25519-sk' } }
 
           it do
-            is_expected.to contain_exec("ssh-keygen root@#{facts[:fqdn]}").with(path: '/usr/bin:/bin:/usr/sbin:/sbin',
-                                                                                command: "ssh-keygen -q -t ed25519-sk -C root@#{facts[:fqdn]} -N '' -f /root/.ssh/id_ed25519_sk",
-                                                                                creates: ['/root/.ssh/id_ed25519_sk', '/root/.ssh/id_ed25519_sk.pub'],)
+            is_expected.to contain_exec("ssh-keygen root@#{facts[:networking][:fqdn]}")
+              .with(path: '/usr/bin:/bin:/usr/sbin:/sbin',
+                    command: "ssh-keygen -q -t ed25519-sk -C root@#{facts[:networking][:fqdn]} -N '' -f /root/.ssh/id_ed25519_sk",
+                    creates: ['/root/.ssh/id_ed25519_sk', '/root/.ssh/id_ed25519_sk.pub'],)
           end
         end
       end
@@ -233,7 +248,7 @@ describe 'root' do
         let(:params) { { collect_exported_keys: true } }
 
         it { is_expected.to have_root__key__collect_resource_count(1) }
-        it { is_expected.to contain_root__key__collect(facts[:domain]) }
+        it { is_expected.to contain_root__key__collect(facts[:networking][:domain]) }
 
         context 'when multiple export_key_tags defined' do
           let(:params) { { collect_exported_keys: true, collect_exported_keys_tags: ['foo', 'bar'] } }
@@ -272,11 +287,17 @@ describe 'root' do
       context 'with kerberos_login_principals defined' do
         let(:params) { { kerberos_login_principals: ['user1@EXAMPLE.COM', 'user2@EXAMPLE.COM'] } }
 
-        it 'has valid contents' do
-          verify_contents(catalogue, '/root/.k5login', [
-                            'user1@EXAMPLE.COM',
-                            'user2@EXAMPLE.COM',
-                          ],)
+        it { is_expected.to compile.with_all_deps }
+
+        it do
+          is_expected.to contain_file('/root/.k5login').with(
+            ensure: 'file',
+            content: <<~EOFK5LOGIN,
+      # File managed by Puppet (root::manage_kerberos = true), DO NOT EDIT
+      user1@EXAMPLE.COM
+      user2@EXAMPLE.COM
+            EOFK5LOGIN
+          )
         end
       end
 
@@ -292,13 +313,19 @@ describe 'root' do
           }
         end
 
-        it 'has valid contents' do
-          verify_contents(catalogue, '/root/.k5users', [
-                            'user1@EXAMPLE.COM /foo /bar',
-                            'user2@EXAMPLE.COM /foo/bar /baz',
-                            'user3@EXAMPLE.COM ',
-                            'user4@EXAMPLE.COM ',
-                          ],)
+        it { is_expected.to compile.with_all_deps }
+
+        it do
+          is_expected.to contain_file('/root/.k5users').with(
+            ensure: 'file',
+            content: <<~EOFK5USERS,
+      # File managed by Puppet (root::manage_kerberos = true), DO NOT EDIT
+      user1@EXAMPLE.COM /foo /bar
+      user2@EXAMPLE.COM /foo/bar /baz
+      user3@EXAMPLE.COM
+      user4@EXAMPLE.COM
+            EOFK5USERS
+          )
         end
       end
     end

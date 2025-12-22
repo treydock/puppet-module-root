@@ -9,8 +9,11 @@ describe 'root class:' do
         class { 'root': }
       PP
 
-      apply_manifest(pp, catch_failures: true)
-      apply_manifest(pp, catch_changes: true)
+      result = apply_manifest(pp, catch_failures: true)
+      expect(result.exit_code).to eq(0).or eq(2) # 0 = no changes, 2 = changes applied
+
+      result = apply_manifest(pp, catch_changes: true)
+      expect(result.exit_code).to eq(0) # second run should be idempotent
     end
 
     describe file('/root') do
@@ -52,8 +55,11 @@ describe 'root class:' do
         class { 'root': mailaliases => [ 'foo@bar.com' ] }
       PP
 
-      apply_manifest(pp, catch_failures: true)
-      apply_manifest(pp, catch_changes: true)
+      result = apply_manifest(pp, catch_failures: true)
+      expect(result.exit_code).to eq(0).or eq(2) # 0 = no changes, 2 = changes applied
+
+      result = apply_manifest(pp, catch_changes: true)
+      expect(result.exit_code).to eq(0) # second run should be idempotent
     end
 
     describe file('/etc/aliases') do
