@@ -88,6 +88,12 @@ class root (
     false => 'present',
   }
 
+  mailalias { 'root':
+    ensure    => $mailalias_ensure,
+    recipient => $mailaliases,
+    notify    => Exec['root newaliases'],
+  }
+
   exec { 'root newaliases':
     command     => 'newaliases',
     path        => ['/usr/bin','/usr/sbin','/bin','/sbin'],
@@ -129,13 +135,7 @@ class root (
     group  => 'root',
     mode   => '0700',
   }
-  file { '/root/.ssh/authorized_keys':
-    ensure => 'file',
-    path   => '/root/.ssh/authorized_keys',
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0600',
-  }
+
   if $ssh_private_key_source {
     file { $ssh_private_key:
       ensure    => 'file',
@@ -157,32 +157,12 @@ class root (
     }
   }
 
-  mailalias { 'root':
-    ensure    => $mailalias_ensure,
-    recipient => $mailaliases,
-    notify    => Exec['root newaliases'],
-  }
-
-  if $logout_timeout {
-    $timeout_ensure = 'file'
-  } else {
-    $timeout_ensure = 'absent'
-  }
-
-  file { '/etc/profile.d/root_logout_timeout.sh':
-    ensure  => $timeout_ensure,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    content => template('root/root_logout_timeout.sh.erb'),
-  }
-
-  file { '/etc/profile.d/root_logout_timeout.csh':
-    ensure  => $timeout_ensure,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    content => template('root/root_logout_timeout.csh.erb'),
+  file { '/root/.ssh/authorized_keys':
+    ensure => 'file',
+    path   => '/root/.ssh/authorized_keys',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0600',
   }
 
   if $ssh_authorized_keys =~ Array {
@@ -208,5 +188,27 @@ class root (
 
   if $manage_kerberos {
     contain root::kerberos
+  }
+
+  if $logout_timeout {
+    $timeout_ensure = 'file'
+  } else {
+    $timeout_ensure = 'absent'
+  }
+
+  file { '/etc/profile.d/root_logout_timeout.sh':
+    ensure  => $timeout_ensure,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    content => template('root/root_logout_timeout.sh.erb'),
+  }
+
+  file { '/etc/profile.d/root_logout_timeout.csh':
+    ensure  => $timeout_ensure,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    content => template('root/root_logout_timeout.csh.erb'),
   }
 }
