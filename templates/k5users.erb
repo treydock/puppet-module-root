@@ -1,9 +1,8 @@
 # File managed by Puppet (root::manage_kerberos = true), DO NOT EDIT
 <%- scope['root::kerberos_users_commands'].each_pair do |user, commands| -%>
 <%-
-if commands.is_a?(Array)
-  commands = commands.join(' ')
-end
+  commands = commands.join(' ') if commands.is_a?(Array)
+  commands_str = commands.to_s.strip
 -%>
-<%= user %> <%= commands %>
+<%= user %><%= " #{commands_str}" unless commands_str.empty? %>
 <%- end -%>
