@@ -213,18 +213,22 @@ describe 'root' do
         it { is_expected.to contain_class('root::key::export') }
 
         it do
-          is_expected.to contain_exec("ssh-keygen root@#{facts[:networking]['fqdn']}").with(path: '/usr/bin:/bin:/usr/sbin:/sbin',
-                                                                                            command: "ssh-keygen -q -t rsa -C root@#{facts[:networking]['fqdn']} -N '' -f /root/.ssh/id_rsa",
-                                                                                            creates: ['/root/.ssh/id_rsa', '/root/.ssh/id_rsa.pub'],)
+          is_expected.to contain_exec("ssh-keygen root@#{facts[:networking]['fqdn']}").with(
+            path: '/usr/bin:/bin:/usr/sbin:/sbin',
+            command: "ssh-keygen -q -t rsa -C root@#{facts[:networking]['fqdn']} -N '' -f /root/.ssh/id_rsa",
+            creates: ['/root/.ssh/id_rsa', '/root/.ssh/id_rsa.pub'],
+          )
         end
 
         context 'when key type is ed25519-sk' do
           let(:params) { { export_key: true, generate_key_type: 'ed25519-sk' } }
 
           it do
-            is_expected.to contain_exec("ssh-keygen root@#{facts[:networking]['fqdn']}").with(path: '/usr/bin:/bin:/usr/sbin:/sbin',
-                                                                                              command: "ssh-keygen -q -t ed25519-sk -C root@#{facts[:networking]['fqdn']} -N '' -f /root/.ssh/id_ed25519_sk",
-                                                                                              creates: ['/root/.ssh/id_ed25519_sk', '/root/.ssh/id_ed25519_sk.pub'],)
+            is_expected.to contain_exec("ssh-keygen root@#{facts[:networking]['fqdn']}").with(
+              path: '/usr/bin:/bin:/usr/sbin:/sbin',
+              command: "ssh-keygen -q -t ed25519-sk -C root@#{facts[:networking]['fqdn']} -N '' -f /root/.ssh/id_ed25519_sk",
+              creates: ['/root/.ssh/id_ed25519_sk', '/root/.ssh/id_ed25519_sk.pub'],
+            )
           end
         end
       end
