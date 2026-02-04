@@ -44,11 +44,6 @@ describe 'root class:' do
     it 'runs successfully' do
       pp = <<-PP
         package { 'postfix': ensure => present }->
-        augeas { 'inet_protocols ipv4':
-          changes => 'set inet_protocols ipv4',
-          lens    => 'Postfix_main.lns',
-          incl    => '/etc/postfix/main.cf',
-        }->
         class { 'root': mailaliases => [ 'foo@bar.com' ] }
       PP
 
