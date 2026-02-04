@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe 'root' do
   on_supported_os.each do |os, facts|
-    context "on #{os}" do
+    context "when #{os}" do
       let(:facts) do
         facts.merge(puppetversion: Puppet.version)
       end
@@ -20,7 +20,7 @@ describe 'root' do
         is_expected.to contain_exec('root newaliases').only_with(command: 'newaliases',
                                                                  path: ['/usr/bin', '/usr/sbin', '/bin', '/sbin'],
                                                                  refreshonly: 'true',
-                                                                 onlyif: 'which newaliases')
+                                                                 onlyif: 'which newaliases',)
       end
 
       it do
@@ -31,7 +31,7 @@ describe 'root' do
                                                       home: '/root',
                                                       shell: '/bin/bash',
                                                       uid: '0',
-                                                      purge_ssh_keys: 'true')
+                                                      purge_ssh_keys: 'true',)
       end
 
       it { is_expected.not_to contain_class('root::key::export') }
@@ -54,7 +54,7 @@ describe 'root' do
                                                        path: '/root',
                                                        owner: 'root',
                                                        group: 'root',
-                                                       mode: '0550')
+                                                       mode: '0550',)
       end
 
       it do
@@ -62,7 +62,7 @@ describe 'root' do
                                                             path: '/root/.ssh',
                                                             owner: 'root',
                                                             group: 'root',
-                                                            mode: '0700')
+                                                            mode: '0700',)
       end
 
       it do
@@ -70,7 +70,7 @@ describe 'root' do
                                                                             path: '/root/.ssh/authorized_keys',
                                                                             owner: 'root',
                                                                             group: 'root',
-                                                                            mode: '0600')
+                                                                            mode: '0600',)
       end
 
       it { is_expected.to contain_mailalias('root').with_ensure('absent') }
@@ -93,13 +93,13 @@ describe 'root' do
         it do
           is_expected.to contain_ssh_authorized_key('ssh-rsa longhashfoo== foo').with(name: 'foo',
                                                                                       key: 'longhashfoo==',
-                                                                                      type: 'ssh-rsa')
+                                                                                      type: 'ssh-rsa',)
         end
 
         it do
           is_expected.to contain_ssh_authorized_key('ssh-dss longhashbar== bar').with(name: 'bar',
                                                                                       key: 'longhashbar==',
-                                                                                      type: 'ssh-dss')
+                                                                                      type: 'ssh-dss',)
         end
       end
 
@@ -108,12 +108,12 @@ describe 'root' do
           { ssh_authorized_keys: {
             'foo' => {
               'key' => 'longhashfoo==',
-              'type' => 'rsa'
+              'type' => 'rsa',
             },
             'bar' => {
               'key' => 'longhashbar==',
-              'type' => 'dss'
-            }
+              'type' => 'dss',
+            },
           } }
         end
 
@@ -121,22 +121,22 @@ describe 'root' do
 
         it do
           is_expected.to contain_root__ssh_authorized_key('foo').with(key: 'longhashfoo==',
-                                                                      type: 'rsa')
+                                                                      type: 'rsa',)
         end
 
         it do
           is_expected.to contain_root__ssh_authorized_key('bar').with(key: 'longhashbar==',
-                                                                      type: 'dss')
+                                                                      type: 'dss',)
         end
 
         it do
           is_expected.to contain_ssh_authorized_key('foo').with(key: 'longhashfoo==',
-                                                                type: 'rsa')
+                                                                type: 'rsa',)
         end
 
         it do
           is_expected.to contain_ssh_authorized_key('bar').with(key: 'longhashbar==',
-                                                                type: 'dss')
+                                                                type: 'dss',)
         end
       end
 
@@ -146,7 +146,7 @@ describe 'root' do
         it do
           is_expected.to contain_mailalias('root').with(ensure: 'present',
                                                         recipient: ['foo', 'bar'],
-                                                        notify: 'Exec[root newaliases]')
+                                                        notify: 'Exec[root newaliases]',)
         end
       end
 
@@ -157,14 +157,14 @@ describe 'root' do
           is_expected.to contain_file('/etc/profile.d/root_logout_timeout.csh').with(ensure: 'file',
                                                                                      owner: 'root',
                                                                                      group: 'root',
-                                                                                     mode: '0644').with_content(%r{^\s*set -r autologout 1$})
+                                                                                     mode: '0644',).with_content(%r{^\s*set -r autologout 1$})
         end
 
         it do
           is_expected.to contain_file('/etc/profile.d/root_logout_timeout.sh').with(ensure: 'file',
                                                                                     owner: 'root',
                                                                                     group: 'root',
-                                                                                    mode: '0644').with_content(%r{^\s*TMOUT=90$})
+                                                                                    mode: '0644',).with_content(%r{^\s*TMOUT=90$})
         end
       end
 
@@ -175,14 +175,14 @@ describe 'root' do
           is_expected.to contain_file('/etc/profile.d/root_logout_timeout.csh').with(ensure: 'file',
                                                                                      owner: 'root',
                                                                                      group: 'root',
-                                                                                     mode: '0644').with_content(%r{^\s*set -r autologout 1$})
+                                                                                     mode: '0644',).with_content(%r{^\s*set -r autologout 1$})
         end
 
         it do
           is_expected.to contain_file('/etc/profile.d/root_logout_timeout.sh').with(ensure: 'file',
                                                                                     owner: 'root',
                                                                                     group: 'root',
-                                                                                    mode: '0644').with_content(%r{^\s*TMOUT=20$})
+                                                                                    mode: '0644',).with_content(%r{^\s*TMOUT=20$})
         end
       end
 
@@ -193,14 +193,14 @@ describe 'root' do
           is_expected.to contain_file('/etc/profile.d/root_logout_timeout.csh').with(ensure: 'file',
                                                                                      owner: 'root',
                                                                                      group: 'root',
-                                                                                     mode: '0644').with_content(%r{^\s*set -r autologout 0$})
+                                                                                     mode: '0644',).with_content(%r{^\s*set -r autologout 0$})
         end
 
         it do
           is_expected.to contain_file('/etc/profile.d/root_logout_timeout.sh').with(ensure: 'file',
                                                                                     owner: 'root',
                                                                                     group: 'root',
-                                                                                    mode: '0644').with_content(%r{^\s*TMOUT=0$})
+                                                                                    mode: '0644',).with_content(%r{^\s*TMOUT=0$})
         end
       end
 
@@ -213,18 +213,22 @@ describe 'root' do
         it { is_expected.to contain_class('root::key::export') }
 
         it do
-          is_expected.to contain_exec("ssh-keygen root@#{facts[:fqdn]}").with(path: '/usr/bin:/bin:/usr/sbin:/sbin',
-                                                                              command: "ssh-keygen -q -t rsa -C root@#{facts[:fqdn]} -N '' -f /root/.ssh/id_rsa",
-                                                                              creates: ['/root/.ssh/id_rsa', '/root/.ssh/id_rsa.pub'])
+          is_expected.to contain_exec("ssh-keygen root@#{facts[:networking]['fqdn']}").with(
+            path: '/usr/bin:/bin:/usr/sbin:/sbin',
+            command: "ssh-keygen -q -t rsa -C root@#{facts[:networking]['fqdn']} -N '' -f /root/.ssh/id_rsa",
+            creates: ['/root/.ssh/id_rsa', '/root/.ssh/id_rsa.pub'],
+          )
         end
 
         context 'when key type is ed25519-sk' do
           let(:params) { { export_key: true, generate_key_type: 'ed25519-sk' } }
 
           it do
-            is_expected.to contain_exec("ssh-keygen root@#{facts[:fqdn]}").with(path: '/usr/bin:/bin:/usr/sbin:/sbin',
-                                                                                command: "ssh-keygen -q -t ed25519-sk -C root@#{facts[:fqdn]} -N '' -f /root/.ssh/id_ed25519_sk",
-                                                                                creates: ['/root/.ssh/id_ed25519_sk', '/root/.ssh/id_ed25519_sk.pub'])
+            is_expected.to contain_exec("ssh-keygen root@#{facts[:networking]['fqdn']}").with(
+              path: '/usr/bin:/bin:/usr/sbin:/sbin',
+              command: "ssh-keygen -q -t ed25519-sk -C root@#{facts[:networking]['fqdn']} -N '' -f /root/.ssh/id_ed25519_sk",
+              creates: ['/root/.ssh/id_ed25519_sk', '/root/.ssh/id_ed25519_sk.pub'],
+            )
           end
         end
       end
@@ -233,7 +237,7 @@ describe 'root' do
         let(:params) { { collect_exported_keys: true } }
 
         it { is_expected.to have_root__key__collect_resource_count(1) }
-        it { is_expected.to contain_root__key__collect(facts[:domain]) }
+        it { is_expected.to contain_root__key__collect(facts[:networking]['domain']) }
 
         context 'when multiple export_key_tags defined' do
           let(:params) { { collect_exported_keys: true, collect_exported_keys_tags: ['foo', 'bar'] } }
@@ -275,8 +279,8 @@ describe 'root' do
         it 'has valid contents' do
           verify_contents(catalogue, '/root/.k5login', [
                             'user1@EXAMPLE.COM',
-                            'user2@EXAMPLE.COM'
-                          ])
+                            'user2@EXAMPLE.COM',
+                          ],)
         end
       end
 
@@ -287,8 +291,8 @@ describe 'root' do
               'user1@EXAMPLE.COM' => ['/foo', '/bar'],
               'user2@EXAMPLE.COM' => '/foo/bar /baz',
               'user3@EXAMPLE.COM' => '',
-              'user4@EXAMPLE.COM' => []
-            }
+              'user4@EXAMPLE.COM' => [],
+            },
           }
         end
 
@@ -297,8 +301,8 @@ describe 'root' do
                             'user1@EXAMPLE.COM /foo /bar',
                             'user2@EXAMPLE.COM /foo/bar /baz',
                             'user3@EXAMPLE.COM ',
-                            'user4@EXAMPLE.COM '
-                          ])
+                            'user4@EXAMPLE.COM ',
+                          ],)
         end
       end
     end

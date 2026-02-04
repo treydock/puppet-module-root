@@ -25,7 +25,7 @@ describe 'root_ssh_key fact' do
     expect(Facter.fact(:root_ssh_key).value).to eq(
       {
         'rsa' => 'SOMEKEY==',
-        'ecdsa' => 'FOOBAR=='
+        'ecdsa' => 'FOOBAR==',
       },
     )
   end

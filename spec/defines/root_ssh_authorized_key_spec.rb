@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe 'root::ssh_authorized_key' do
   on_supported_os.each do |os, facts|
-    context "on #{os}" do
+    context "when #{os}" do
       let(:facts) do
         facts.merge(puppetversion: Puppet.version)
       end
@@ -13,7 +13,7 @@ describe 'root::ssh_authorized_key' do
       let(:params) do
         {
           key: 'longhash',
-          type: 'rsa'
+          type: 'rsa',
         }
       end
 
@@ -22,7 +22,7 @@ describe 'root::ssh_authorized_key' do
                                                                    name: 'foo',
                                                                    key: 'longhash',
                                                                    type: 'rsa',
-                                                                   user: 'root')
+                                                                   user: 'root',)
       end
 
       context 'when options defined' do
@@ -31,7 +31,7 @@ describe 'root::ssh_authorized_key' do
           {
             key: 'longhash',
             options: ['no-port-forwarding', 'no-pty'],
-            type: 'rsa'
+            type: 'rsa',
           }
         end
 
@@ -41,7 +41,7 @@ describe 'root::ssh_authorized_key' do
                                                                      key: 'longhash',
                                                                      options: ['no-port-forwarding', 'no-pty'],
                                                                      type: 'rsa',
-                                                                     user: 'root')
+                                                                     user: 'root',)
         end
       end
 
@@ -56,7 +56,7 @@ describe 'root::ssh_authorized_key' do
                                                                                           name: 'foo@bar',
                                                                                           key: 'longhash',
                                                                                           type: 'ssh-rsa',
-                                                                                          user: 'root')
+                                                                                          user: 'root',)
         end
       end
 
