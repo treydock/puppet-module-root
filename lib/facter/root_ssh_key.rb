@@ -11,7 +11,7 @@ Facter.add(:root_ssh_key) do
       'ecdsa' => '/root/.ssh/id_ecdsa.pub',
       'ecdsa-sk' => '/root/.ssh/id_ecdsa_sk.pub',
       'ed25519' => '/root/.ssh/id_ed25519.pub',
-      'ed25519-sk' => '/root/.ssh/id_ed25519_sk.pub'
+      'ed25519-sk' => '/root/.ssh/id_ed25519_sk.pub',
     }
 
     value = {}

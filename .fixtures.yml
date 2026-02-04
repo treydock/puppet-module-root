@@ -1,15 +1,10 @@
 fixtures:
-  repositories:
+  forge_modules:
     stdlib:
-      repo: https://github.com/puppetlabs/puppetlabs-stdlib.git
-      ref: 4.13.1
+      repo: puppetlabs/stdlib
     mailalias_core:
-      repo: https://github.com/puppetlabs/puppetlabs-mailalias_core.git
-      ref: 1.0.5
-      puppet_version: ">= 6.0.0"
+      repo: puppetlabs/mailalias_core
     sshkeys_core:
-      repo: https://github.com/puppetlabs/puppetlabs-sshkeys_core.git
-      ref: 1.0.2
-      puppet_version: ">= 6.0.0"
+      repo: puppetlabs/sshkeys_core
   symlinks:
     root: "#{source_dir}"
