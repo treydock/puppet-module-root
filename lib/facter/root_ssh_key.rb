@@ -17,7 +17,7 @@ Facter.add(:root_ssh_key) do
     value = {}
     ssh_key_paths.each_pair do |key_type, key_path|
       if File.exist?(key_path)
-        pubkey = Facter::Util::Resolution.exec("cat #{key_path}").split(%r{\s+})
+        pubkey = Facter::Core::Execution.execute("cat #{key_path}", on_fail: nil).split(%r{\s+})
         value[key_type] = pubkey[1] if pubkey.size >= 2
       end
     end
