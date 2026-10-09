@@ -20,7 +20,7 @@
 
 #### Public Defined types
 
-* [`root::ssh_authorized_key`](#rootssh_authorized_key): Define root user's ssh_authorized_key resources
+* [`root::ssh_authorized_key`](#root--ssh_authorized_key): Define root user's ssh_authorized_key resources
 
 #### Private Defined types
 
@@ -28,7 +28,7 @@
 
 ### Data types
 
-* [`Root::SSHKeyTypes`](#rootsshkeytypes)
+* [`Root::SSHKeyTypes`](#Root--SSHKeyTypes)
 
 ## Classes
 
@@ -48,27 +48,27 @@ include ::root
 
 The following parameters are available in the `root` class:
 
-* [`mailaliases`](#mailaliases)
-* [`ssh_authorized_keys`](#ssh_authorized_keys)
-* [`password`](#password)
-* [`purge_ssh_keys`](#purge_ssh_keys)
-* [`generate_key_type`](#generate_key_type)
-* [`export_key`](#export_key)
-* [`export_key_type`](#export_key_type)
-* [`export_key_options`](#export_key_options)
-* [`export_key_tag`](#export_key_tag)
-* [`collect_exported_keys`](#collect_exported_keys)
-* [`collect_exported_keys_tags`](#collect_exported_keys_tags)
-* [`ssh_private_key`](#ssh_private_key)
-* [`ssh_private_key_source`](#ssh_private_key_source)
-* [`ssh_public_key`](#ssh_public_key)
-* [`ssh_public_key_source`](#ssh_public_key_source)
-* [`logout_timeout`](#logout_timeout)
-* [`manage_kerberos`](#manage_kerberos)
-* [`kerberos_login_principals`](#kerberos_login_principals)
-* [`kerberos_users_commands`](#kerberos_users_commands)
+* [`mailaliases`](#-root--mailaliases)
+* [`ssh_authorized_keys`](#-root--ssh_authorized_keys)
+* [`password`](#-root--password)
+* [`purge_ssh_keys`](#-root--purge_ssh_keys)
+* [`generate_key_type`](#-root--generate_key_type)
+* [`export_key`](#-root--export_key)
+* [`export_key_type`](#-root--export_key_type)
+* [`export_key_options`](#-root--export_key_options)
+* [`export_key_tag`](#-root--export_key_tag)
+* [`collect_exported_keys`](#-root--collect_exported_keys)
+* [`collect_exported_keys_tags`](#-root--collect_exported_keys_tags)
+* [`ssh_private_key`](#-root--ssh_private_key)
+* [`ssh_private_key_source`](#-root--ssh_private_key_source)
+* [`ssh_public_key`](#-root--ssh_public_key)
+* [`ssh_public_key_source`](#-root--ssh_public_key_source)
+* [`logout_timeout`](#-root--logout_timeout)
+* [`manage_kerberos`](#-root--manage_kerberos)
+* [`kerberos_login_principals`](#-root--kerberos_login_principals)
+* [`kerberos_users_commands`](#-root--kerberos_users_commands)
 
-##### <a name="mailaliases"></a>`mailaliases`
+##### <a name="-root--mailaliases"></a>`mailaliases`
 
 Data type: `Array`
 
@@ -77,7 +77,7 @@ When an empty array is given Mailaliases[root] is set to `ensure => absent`.
 
 Default value: `[]`
 
-##### <a name="ssh_authorized_keys"></a>`ssh_authorized_keys`
+##### <a name="-root--ssh_authorized_keys"></a>`ssh_authorized_keys`
 
 Data type: `Variant[Array, Hash]`
 
@@ -86,23 +86,23 @@ See `root::ssh_authorized_key` for examples of valid formats
 
 Default value: `{}`
 
-##### <a name="password"></a>`password`
+##### <a name="-root--password"></a>`password`
 
 Data type: `Optional[Variant[String, Sensitive[String]]]`
 
 The password hash used for the root account.
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="purge_ssh_keys"></a>`purge_ssh_keys`
+##### <a name="-root--purge_ssh_keys"></a>`purge_ssh_keys`
 
 Data type: `Boolean`
 
 Sets if unmanaged SSH keys will be purged for the root account.
 
-Default value: ``true``
+Default value: `true`
 
-##### <a name="generate_key_type"></a>`generate_key_type`
+##### <a name="-root--generate_key_type"></a>`generate_key_type`
 
 Data type: `Root::SSHKeyTypes`
 
@@ -110,15 +110,15 @@ Type of SSH key to generate when exporting
 
 Default value: `'rsa'`
 
-##### <a name="export_key"></a>`export_key`
+##### <a name="-root--export_key"></a>`export_key`
 
 Data type: `Boolean`
 
 Sets if the root SSH RSA key should be created and exported.
 
-Default value: ``false``
+Default value: `false`
 
-##### <a name="export_key_type"></a>`export_key_type`
+##### <a name="-root--export_key_type"></a>`export_key_type`
 
 Data type: `Optional[Root::SSHKeyTypes]`
 
@@ -126,15 +126,15 @@ The ssh_authorized_key type that is exported
 
 Default value: `$generate_key_type`
 
-##### <a name="export_key_options"></a>`export_key_options`
+##### <a name="-root--export_key_options"></a>`export_key_options`
 
 Data type: `Optional[Array]`
 
 Options to set for the exported SSH RSA key
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="export_key_tag"></a>`export_key_tag`
+##### <a name="-root--export_key_tag"></a>`export_key_tag`
 
 Data type: `String`
 
@@ -142,15 +142,15 @@ The tag to use when exporting the root SSH RSA key.
 
 Default value: `$facts['networking']['domain']`
 
-##### <a name="collect_exported_keys"></a>`collect_exported_keys`
+##### <a name="-root--collect_exported_keys"></a>`collect_exported_keys`
 
 Data type: `Boolean`
 
 Sets if the export root SSH RSA keys should be collected.
 
-Default value: ``false``
+Default value: `false`
 
-##### <a name="collect_exported_keys_tags"></a>`collect_exported_keys_tags`
+##### <a name="-root--collect_exported_keys_tags"></a>`collect_exported_keys_tags`
 
 Data type: `Array`
 
@@ -158,7 +158,7 @@ Array of tags for root SSH RSA keys to collect.
 
 Default value: `[$facts['networking']['domain']]`
 
-##### <a name="ssh_private_key"></a>`ssh_private_key`
+##### <a name="-root--ssh_private_key"></a>`ssh_private_key`
 
 Data type: `Stdlib::Absolutepath`
 
@@ -166,15 +166,15 @@ Path to root's SSH private key
 
 Default value: `'/root/.ssh/id_rsa'`
 
-##### <a name="ssh_private_key_source"></a>`ssh_private_key_source`
+##### <a name="-root--ssh_private_key_source"></a>`ssh_private_key_source`
 
 Data type: `Optional[String]`
 
 The source for root's SSH RSA private key
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="ssh_public_key"></a>`ssh_public_key`
+##### <a name="-root--ssh_public_key"></a>`ssh_public_key`
 
 Data type: `Stdlib::Absolutepath`
 
@@ -182,31 +182,31 @@ Path to root's SSH public key
 
 Default value: `'/root/.ssh/id_rsa.pub'`
 
-##### <a name="ssh_public_key_source"></a>`ssh_public_key_source`
+##### <a name="-root--ssh_public_key_source"></a>`ssh_public_key_source`
 
 Data type: `Optional[String]`
 
 The source for root's SSH RSA public key
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="logout_timeout"></a>`logout_timeout`
+##### <a name="-root--logout_timeout"></a>`logout_timeout`
 
 Data type: `Optional[Integer[0, default]]`
 
 Time (in seconds) before idle interactive terminals will logout
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="manage_kerberos"></a>`manage_kerberos`
+##### <a name="-root--manage_kerberos"></a>`manage_kerberos`
 
 Data type: `Boolean`
 
 Boolean that sets if Kerberos files should be managed
 
-Default value: ``true``
+Default value: `true`
 
-##### <a name="kerberos_login_principals"></a>`kerberos_login_principals`
+##### <a name="-root--kerberos_login_principals"></a>`kerberos_login_principals`
 
 Data type: `Array`
 
@@ -214,7 +214,7 @@ The Kerberos principals to write to /root/.k5login
 
 Default value: `[]`
 
-##### <a name="kerberos_users_commands"></a>`kerberos_users_commands`
+##### <a name="-root--kerberos_users_commands"></a>`kerberos_users_commands`
 
 Data type: `Hash[String[1], Variant[String, Array]]`
 
@@ -224,7 +224,7 @@ Default value: `{}`
 
 ## Defined types
 
-### <a name="rootssh_authorized_key"></a>`root::ssh_authorized_key`
+### <a name="root--ssh_authorized_key"></a>`root::ssh_authorized_key`
 
 Define root user's ssh_authorized_key resources
 
@@ -249,12 +249,12 @@ root::ssh_authorized_key { 'ssh-rsa somelonghash== user@fqdn': }
 
 The following parameters are available in the `root::ssh_authorized_key` defined type:
 
-* [`ensure`](#ensure)
-* [`key`](#key)
-* [`options`](#options)
-* [`type`](#type)
+* [`ensure`](#-root--ssh_authorized_key--ensure)
+* [`key`](#-root--ssh_authorized_key--key)
+* [`options`](#-root--ssh_authorized_key--options)
+* [`type`](#-root--ssh_authorized_key--type)
 
-##### <a name="ensure"></a>`ensure`
+##### <a name="-root--ssh_authorized_key--ensure"></a>`ensure`
 
 Data type: `Enum['present','absent']`
 
@@ -262,39 +262,35 @@ ssh_authorized_key ensure property
 
 Default value: `'present'`
 
-##### <a name="key"></a>`key`
+##### <a name="-root--ssh_authorized_key--key"></a>`key`
 
 Data type: `Optional[String[1]]`
 
 The SSH key hash
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="options"></a>`options`
+##### <a name="-root--ssh_authorized_key--options"></a>`options`
 
 Data type: `Optional[Variant[String[1], Array]]`
 
 The SSH key options
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="type"></a>`type`
+##### <a name="-root--ssh_authorized_key--type"></a>`type`
 
 Data type: `Optional[String[1]]`
 
 The type of SSH key.
 
-Default value: ``undef``
+Default value: `undef`
 
 ## Data types
 
-### <a name="rootsshkeytypes"></a>`Root::SSHKeyTypes`
+### <a name="Root--SSHKeyTypes"></a>`Root::SSHKeyTypes`
 
 The Root::SSHKeyTypes data type.
 
-Alias of
-
-```puppet
-Enum['dsa', 'rsa', 'ecdsa', 'ecdsa-sk', 'ed25519', 'ed25519-sk']
-```
+Alias of `Enum['dsa', 'rsa', 'ecdsa', 'ecdsa-sk', 'ed25519', 'ed25519-sk']`
 

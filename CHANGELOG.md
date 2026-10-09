@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v7.0.0](https://github.com/treydock/puppet-module-root/tree/v7.0.0) (2026-10-09)
+
+[Full Changelog](https://github.com/treydock/puppet-module-root/compare/v6.1.0...v7.0.0)
+
+### Changed
+
+- Drop Debian 11, Add Debian 13 and Ubuntu 26.04 [\#33](https://github.com/treydock/puppet-module-root/pull/33) ([treydock](https://github.com/treydock))
+- Major updates - read description [\#30](https://github.com/treydock/puppet-module-root/pull/30) ([treydock](https://github.com/treydock))
+
+### Fixed
+
+- Cleaning Up Deprecation Warnings [\#32](https://github.com/treydock/puppet-module-root/pull/32) ([jcpunk](https://github.com/jcpunk))
+
 ## [v6.1.0](https://github.com/treydock/puppet-module-root/tree/v6.1.0) (2023-06-16)
 
 [Full Changelog](https://github.com/treydock/puppet-module-root/compare/v6.0.0...v6.1.0)
