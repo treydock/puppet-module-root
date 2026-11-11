@@ -118,6 +118,12 @@ If a different module manages Kerberos for root, disable Kerberos in this module
 root::manage_kerberos: false
 ```
 
+If another resource or module manages root's mail aliases, disable mailalias management in this module. The `Mailaliases[root]` resource and the `newaliases` exec will not be defined:
+
+```yaml
+root::manage_mailaliases: false
+```
+
 Set an automatic logout for idle interactive shells (in seconds):
 
 ```yaml

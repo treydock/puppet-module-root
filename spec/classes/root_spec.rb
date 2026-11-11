@@ -150,6 +150,14 @@ describe 'root' do
         end
       end
 
+      context 'when manage_mailaliases => false' do
+        let(:params) { { manage_mailaliases: false } }
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.not_to contain_mailalias('root') }
+        it { is_expected.not_to contain_exec('root newaliases') }
+      end
+
       context 'with timeout set over 1 minute' do
         let(:params) { { logout_timeout: 90 } }
 
