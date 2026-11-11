@@ -58,9 +58,6 @@ jobs:
         openvox:
           - "openvox8"
           - "openvox9"
-        puppet:
-          - "openvox8"
-          - "openvox9"
     env:
       BUNDLE_WITHOUT: release
       BEAKER_debug: true
@@ -78,4 +75,3 @@ jobs:
         env:
           BEAKER_PUPPET_COLLECTION: ${{ matrix.openvox }}
           BEAKER_set: ${{ matrix.set }}
-          BEAKER_puppet: ${{ matrix.puppet }}
