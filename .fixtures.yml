@@ -6,5 +6,3 @@ fixtures:
       repo: puppetlabs/mailalias_core
     sshkeys_core:
       repo: puppetlabs/sshkeys_core
-  symlinks:
-    root: "#{source_dir}"
