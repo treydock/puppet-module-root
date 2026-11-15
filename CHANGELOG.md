@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v8.0.0](https://github.com/treydock/puppet-module-root/tree/v8.0.0) (2026-11-15)
+
+[Full Changelog](https://github.com/treydock/puppet-module-root/compare/v7.0.0...v8.0.0)
+
+### Changed
+
+- Support OpenVox 8 and 9, drop Puppet support [\#35](https://github.com/treydock/puppet-module-root/pull/35) ([treydock](https://github.com/treydock))
+
+### Added
+
+- Make management of email alias optional [\#34](https://github.com/treydock/puppet-module-root/pull/34) ([jcpunk](https://github.com/jcpunk))
+
 ## [v7.0.0](https://github.com/treydock/puppet-module-root/tree/v7.0.0) (2026-10-09)
 
 [Full Changelog](https://github.com/treydock/puppet-module-root/compare/v6.1.0...v7.0.0)

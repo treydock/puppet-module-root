@@ -38,7 +38,7 @@ Manage root user
 
 #### Examples
 
-##### 
+#####
 
 ```puppet
 include ::root
@@ -303,4 +303,3 @@ Default value: `undef`
 The Root::SSHKeyTypes data type.
 
 Alias of `Enum['dsa', 'rsa', 'ecdsa', 'ecdsa-sk', 'ed25519', 'ed25519-sk']`
-
