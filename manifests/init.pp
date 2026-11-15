@@ -7,6 +7,10 @@
 #   An array that defines mailaliases for the root user (defaults to an empty array).
 #   When an empty array is given Mailaliases[root] is set to `ensure => absent`.
 #
+# @param manage_mailaliases
+#   Boolean that sets if the `Mailaliases[root]` resource and the `newaliases` exec are managed.
+#   Set to false when another resource or module manages root's mail aliases.
+#
 # @param ssh_authorized_keys
 #   Defines ssh_autorized_keys to be passed to the `root::ssh_authorized_key` defined type.
 #   See `root::ssh_authorized_key` for examples of valid formats
@@ -64,6 +68,7 @@
 #
 class root (
   Array $mailaliases                        = [],
+  Boolean $manage_mailaliases               = true,
   Variant[Array, Hash] $ssh_authorized_keys = {},
   Optional[Variant[String, Sensitive[String]]] $password = undef,
   Boolean $purge_ssh_keys                   = true,
@@ -83,18 +88,6 @@ class root (
   Hash[String[1], Variant[String, Array]] $kerberos_users_commands = {},
   Optional[Integer[0, default]] $logout_timeout                    = undef,
 ) inherits root::params {
-  $mailalias_ensure = empty($mailaliases) ? {
-    true  => 'absent',
-    false => 'present',
-  }
-
-  exec { 'root newaliases':
-    command     => 'newaliases',
-    path        => ['/usr/bin','/usr/sbin','/bin','/sbin'],
-    refreshonly => true,
-    onlyif      => 'which newaliases',
-  }
-
   if $password != undef {
     # ensure password is a sensitive value
     # even if we were not passed one
@@ -157,10 +150,24 @@ class root (
     }
   }
 
-  mailalias { 'root':
-    ensure    => $mailalias_ensure,
-    recipient => $mailaliases,
-    notify    => Exec['root newaliases'],
+  if $manage_mailaliases {
+    $mailalias_ensure = empty($mailaliases) ? {
+      true  => 'absent',
+      false => 'present',
+    }
+
+    exec { 'root newaliases':
+      command     => 'newaliases',
+      path        => ['/usr/bin','/usr/sbin','/bin','/sbin'],
+      refreshonly => true,
+      onlyif      => 'which newaliases',
+    }
+
+    mailalias { 'root':
+      ensure    => $mailalias_ensure,
+      recipient => $mailaliases,
+      notify    => Exec['root newaliases'],
+    }
   }
 
   if $logout_timeout {

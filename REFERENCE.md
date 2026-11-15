@@ -49,6 +49,7 @@ include ::root
 The following parameters are available in the `root` class:
 
 * [`mailaliases`](#-root--mailaliases)
+* [`manage_mailaliases`](#-root--manage_mailaliases)
 * [`ssh_authorized_keys`](#-root--ssh_authorized_keys)
 * [`password`](#-root--password)
 * [`purge_ssh_keys`](#-root--purge_ssh_keys)
@@ -76,6 +77,15 @@ An array that defines mailaliases for the root user (defaults to an empty array)
 When an empty array is given Mailaliases[root] is set to `ensure => absent`.
 
 Default value: `[]`
+
+##### <a name="-root--manage_mailaliases"></a>`manage_mailaliases`
+
+Data type: `Boolean`
+
+Boolean that sets if the `Mailaliases[root]` resource and the `newaliases` exec are managed.
+Set to false when another resource or module manages root's mail aliases.
+
+Default value: `true`
 
 ##### <a name="-root--ssh_authorized_keys"></a>`ssh_authorized_keys`
 
